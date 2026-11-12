@@ -1,0 +1,1428 @@
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="theme-color" content="#080b18">
+<title>OMNI-VERSE 2.0 | Infinite Worlds</title>
+
+<style>
+:root {
+  --bg:#080b18;
+  --panel:rgba(23,31,55,.82);
+  --line:rgba(255,255,255,.12);
+  --text:#f4f5ff;
+  --muted:#9ba8c7;
+  --purple:#9385ff;
+  --cyan:#53dce9;
+  --pink:#f58bd5;
+  --gold:#ffd37d;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{
+ margin:0;color:var(--text);
+ font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+ background:
+ radial-gradient(ellipse at 15% 5%,#24205b 0,transparent 40%),
+ radial-gradient(ellipse at 90% 50%,#102e4b 0,transparent 40%),
+ var(--bg);
+ min-height:100vh;
+}
+button,input{font:inherit}
+button{
+ color:white;background:rgba(255,255,255,.07);
+ border:1px solid var(--line);border-radius:12px;
+ padding:11px 15px;cursor:pointer;
+ transition:.2s;
+}
+button:hover{background:rgba(255,255,255,.15)}
+button:active{transform:scale(.97)}
+button:disabled{opacity:.4;cursor:not-allowed}
+.header{
+ position:fixed;top:0;left:0;right:0;height:72px;
+ z-index:1000;padding:0 20px;
+ display:flex;align-items:center;justify-content:space-between;
+ background:rgba(8,11,24,.85);
+ backdrop-filter:blur(25px);
+ border-bottom:1px solid var(--line);
+}
+.brand{display:flex;align-items:center;gap:11px;font-weight:900;letter-spacing:2px}
+.logo{
+ width:40px;height:40px;border-radius:14px;
+ display:grid;place-items:center;font-size:25px;
+ background:linear-gradient(135deg,#8375ff,#4bdbed);
+}
+.paypal{
+ text-decoration:none;color:white;font-size:12px;font-weight:800;
+ background:linear-gradient(135deg,#0878d2,#134ca7);
+ padding:12px 15px;border-radius:25px;
+ border:1px solid #62b8ff;
+ white-space:nowrap;
+}
+main{padding:94px 0 40px}
+.container{width:min(1200px,calc(100% - 30px));margin:auto}
+.hero{padding:20px 0}
+.eyebrow{color:var(--cyan);font-size:11px;letter-spacing:3px;font-weight:800}
+h1{font-size:clamp(32px,6vw,58px);margin:12px 0}
+.gradient{
+ background:linear-gradient(90deg,#a69aff,#62e5e8,#f28bd8);
+ color:transparent;background-clip:text;
+}
+.muted{color:var(--muted);font-size:13px;line-height:1.7}
+.glass{
+ background:var(--panel);backdrop-filter:blur(20px);
+ border:1px solid var(--line);border-radius:20px;
+ box-shadow:0 18px 50px #0005;
+}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:20px 0}
+.stat{padding:15px}
+.stat small{color:var(--muted);font-size:10px}
+.stat strong{display:block;font-size:23px;margin-top:6px}
+.navigation{
+ display:flex;gap:8px;overflow-x:auto;padding:8px 0 16px;
+ scrollbar-width:none;
+}
+.navigation button{flex-shrink:0;font-size:12px}
+.navigation button.active{background:linear-gradient(135deg,#7569ed,#398ecb)}
+.page{display:none}
+.page.active{display:block;animation:fade .3s}
+@keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.panel{padding:20px;margin-bottom:15px}
+h2{font-size:19px;margin:0 0 14px}
+h3{font-size:15px}
+input{
+ color:white;background:#080e20;border:1px solid var(--line);
+ border-radius:11px;padding:12px;min-width:0;
+}
+.row{display:flex;gap:9px;flex-wrap:wrap;align-items:center}
+.row input{flex:1}
+.primary{background:linear-gradient(135deg,#796cff,#368bdb);border:0;font-weight:800}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+.card{
+ padding:17px;text-align:left;border-radius:16px;
+ background:linear-gradient(145deg,#333c6a88,#111a3188);
+ min-height:120px;
+}
+.card.selected{border-color:var(--purple)}
+.card .emoji{font-size:30px;margin-bottom:10px}
+.card strong{display:block}
+.card small{display:block;color:var(--muted);margin-top:7px;line-height:1.6}
+.canvasWrap{
+ position:relative;overflow:hidden;border-radius:16px;
+ background:#070b1a;border:1px solid var(--line);
+ touch-action:none;
+}
+canvas{display:block;width:100%;height:auto;touch-action:none}
+.gameControls{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:14px}
+.status{text-align:center;color:var(--muted);font-size:12px;min-height:25px;margin-top:12px}
+.hidden{display:none!important}
+.planetGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.planetCard{padding:12px;text-align:center;cursor:pointer}
+.planetOrb{
+ width:85px;height:85px;border-radius:50%;margin:5px auto 12px;
+ box-shadow:inset -18px -10px 22px #0009,0 0 25px #8b83ff55;
+}
+.planetCard strong{font-size:12px}
+.planetCard small{display:block;color:var(--muted);margin-top:5px}
+.progress{height:9px;border-radius:10px;background:#ffffff17;overflow:hidden;margin:10px 0}
+.progress span{display:block;height:100%;background:linear-gradient(90deg,#8173ff,#55dce9)}
+.listItem{
+ padding:13px;border-bottom:1px solid var(--line);
+ display:flex;justify-content:space-between;gap:10px;
+ font-size:13px;
+}
+.badge{
+ display:inline-block;padding:5px 9px;border-radius:20px;
+ background:#8375ff33;color:#c3bcff;font-size:10px;
+}
+.footer{text-align:center;padding:30px;color:#7c89a8;font-size:11px}
+#planetCanvas{width:100%;max-height:420px}
+@media(max-width:600px){
+ .header{padding:0 10px;height:67px}
+ .brand{font-size:12px;letter-spacing:1px}
+ .logo{width:34px;height:34px}
+ .paypal{font-size:10px;padding:10px}
+ main{padding-top:80px}
+ .stats{grid-template-columns:repeat(2,1fr)}
+ .planetGrid{grid-template-columns:repeat(2,1fr)}
+ .panel{padding:13px}
+}
+</style>
+</head>
+
+<body>
+
+<header class="header">
+ <div class="brand">
+  <div class="logo">∞</div>
+  <div>OMNI-VERSE <span style="color:#8d85ff">2.0</span></div>
+ </div>
+ <a class="paypal"
+ href="https://www.paypal.com/ncp/payment/W667YSCR59YEN"
+ target="_blank" rel="noopener noreferrer">
+ ☕ 開発者にコーヒーをプレゼント
+ </a>
+</header>
+
+<main>
+<div class="container">
+
+<section class="hero">
+ <div class="eyebrow">INFINITE PROCEDURAL UNIVERSE</div>
+ <h1>Explore <span class="gradient">Everything.</span></h1>
+ <p class="muted">
+  1つのシードから無数の宇宙を生成。
+  惑星を発見し、文明を探索し、ゲームを攻略する。
+  あなただけの宇宙がここから始まる。
+ </p>
+</section>
+
+<section class="stats">
+ <div class="glass stat"><small>UNIVERSES</small><strong id="statWorlds">0</strong></div>
+ <div class="glass stat"><small>PLAYER LEVEL</small><strong id="statLevel">1</strong></div>
+ <div class="glass stat"><small>PLANETS FOUND</small><strong id="statPlanets">0</strong></div>
+ <div class="glass stat"><small>ACHIEVEMENTS</small><strong id="statAchievements">0</strong></div>
+</section>
+
+<nav class="navigation">
+ <button class="active" data-page="home">🌌 HOME</button>
+ <button data-page="games">🎮 GAMES</button>
+ <button data-page="rpg">🚀 RPG</button>
+ <button data-page="planets">🪐 PLANETS</button>
+ <button data-page="collection">📚 ENCYCLOPEDIA</button>
+ <button data-page="achievements">🏆 ACHIEVEMENTS</button>
+ <button data-page="ranking">👑 RANKING</button>
+ <button data-page="saves">💾 SAVES</button>
+</nav>
+
+<!-- HOME -->
+
+<section class="page active" id="page-home">
+ <div class="glass panel">
+  <h2>🌌 Universe Generator</h2>
+  <p class="muted">シード値を入力して、自分だけの宇宙を生成。</p>
+  <div class="row">
+   <input id="seedInput" maxlength="64" placeholder="Universe Seed">
+   <button class="primary" id="generate">✨ GENERATE</button>
+   <button id="randomSeed">🎲 RANDOM</button>
+  </div>
+  <p class="muted" id="currentSeed"></p>
+  <h3 id="worldName">Unknown Universe</h3>
+  <p class="muted" id="worldDescription"></p>
+ </div>
+
+ <div class="glass panel">
+  <h2>✨ Quick Access</h2>
+  <div class="grid">
+   <button class="card" onclick="navigate('games')">
+    <div class="emoji">🧩</div><strong>Quantum Puzzle</strong>
+    <small>プロシージャルパズル</small>
+   </button>
+   <button class="card" onclick="navigate('rpg')">
+    <div class="emoji">🚀</div><strong>Space RPG</strong>
+    <small>惑星探索と冒険</small>
+   </button>
+   <button class="card" onclick="navigate('planets')">
+    <div class="emoji">🪐</div><strong>Planet Explorer</strong>
+    <small>惑星の生成と発見</small>
+   </button>
+   <button class="card" onclick="navigate('ranking')">
+    <div class="emoji">👑</div><strong>Leaderboard</strong>
+    <small>ランキングと記録</small>
+   </button>
+  </div>
+ </div>
+</section>
+
+<!-- GAMES -->
+
+<section class="page" id="page-games">
+ <div class="glass panel">
+  <h2>🎮 Game Center</h2>
+  <div class="grid">
+   <button class="card" onclick="startGame('puzzle')">
+    <div class="emoji">🧩</div><strong>Quantum Puzzle</strong>
+    <small>同じ色のタイルをペアにするパズル</small>
+   </button>
+   <button class="card" onclick="startGame('action')">
+    <div class="emoji">🚀</div><strong>Cosmic Survivor</strong>
+    <small>敵を避けてエネルギーを集める</small>
+   </button>
+  </div>
+ </div>
+
+ <div class="glass panel">
+  <h2 id="gameTitle">🧩 Quantum Puzzle</h2>
+  <div class="canvasWrap">
+   <canvas id="gameCanvas" width="900" height="600"></canvas>
+  </div>
+  <div class="gameControls" id="gameButtons">
+   <button class="primary" id="restartGame">↻ NEW GAME</button>
+   <button id="hintGame">💡 HINT</button>
+   <button id="pauseGame" class="hidden">Ⅱ PAUSE</button>
+  </div>
+  <div class="gameControls hidden" id="dpad">
+   <button data-dir="up">▲</button>
+   <button data-dir="left">◀</button>
+   <button data-dir="down">▼</button>
+   <button data-dir="right">▶</button>
+  </div>
+  <div class="status" id="gameStatus">ゲームを選択してください。</div>
+ </div>
+</section>
+
+<!-- RPG -->
+
+<section class="page" id="page-rpg">
+ <div class="glass panel">
+  <h2>🚀 Cosmic Explorer RPG</h2>
+  <div class="row">
+   <span class="badge" id="playerRank">SPACE EXPLORER</span>
+   <span class="muted" id="playerLevel">LEVEL 1</span>
+   <span class="muted" id="playerXP">0 XP</span>
+  </div>
+  <div class="progress"><span id="xpBar" style="width:0%"></span></div>
+  <div class="grid">
+   <div class="glass panel">
+    <small class="muted">ENERGY</small>
+    <h2 id="rpgEnergy">100</h2>
+   </div>
+   <div class="glass panel">
+    <small class="muted">CREDITS</small>
+    <h2 id="rpgCredits">0</h2>
+   </div>
+  </div>
+ </div>
+
+ <div class="glass panel">
+  <h2>🪐 Exploration Mission</h2>
+  <div class="canvasWrap">
+   <canvas id="rpgCanvas" width="900" height="500"></canvas>
+  </div>
+  <p class="muted">
+   惑星を訪問してXPとクレジットを獲得しよう。
+   発見した惑星は図鑑に登録されます。
+  </p>
+  <div class="gameControls">
+   <button class="primary" id="exploreBtn">🚀 EXPLORE PLANET</button>
+   <button id="healBtn">⚡ RESTORE ENERGY (20)</button>
+  </div>
+  <div class="status" id="rpgStatus">冒険の準備ができています。</div>
+ </div>
+
+ <div class="glass panel">
+  <h2>🎒 Inventory</h2>
+  <div id="inventory"></div>
+ </div>
+</section>
+
+<!-- PLANETS -->
+
+<section class="page" id="page-planets">
+ <div class="glass panel">
+  <h2>🪐 Procedural Planet Laboratory</h2>
+  <p class="muted">
+   シード値に応じて惑星の色、環境、地表パターン、衛星を生成。
+   同じ宇宙では同じ惑星が再現されます。
+  </p>
+  <div class="canvasWrap">
+   <canvas id="planetCanvas" width="900" height="500"></canvas>
+  </div>
+  <h3 id="planetName">Unknown Planet</h3>
+  <p class="muted" id="planetDetails"></p>
+  <div class="gameControls">
+   <button class="primary" id="nextPlanet">🌍 GENERATE PLANET</button>
+   <button id="discoverPlanet">📖 DISCOVER</button>
+  </div>
+ </div>
+ <div class="glass panel">
+  <h2>🌠 Discovered Planets</h2>
+  <div class="planetGrid" id="planetGrid"></div>
+ </div>
+</section>
+
+<!-- ENCYCLOPEDIA -->
+
+<section class="page" id="page-collection">
+ <div class="glass panel">
+  <h2>📚 Universal Encyclopedia</h2>
+  <p class="muted">これまでに発見した惑星と収集したアイテム。</p>
+  <h3>🪐 PLANETS</h3>
+  <div id="encyclopediaPlanets"></div>
+  <h3>💎 ITEMS</h3>
+  <div id="encyclopediaItems"></div>
+ </div>
+</section>
+
+<!-- ACHIEVEMENTS -->
+
+<section class="page" id="page-achievements">
+ <div class="glass panel">
+  <h2>🏆 Achievement System</h2>
+  <p class="muted">探索、戦闘、パズル、惑星発見などの実績。</p>
+  <div id="achievementList"></div>
+ </div>
+</section>
+
+<!-- RANKING -->
+
+<section class="page" id="page-ranking">
+ <div class="glass panel">
+  <h2>👑 Leaderboard</h2>
+  <p class="muted">
+   このバージョンは端末内ランキングです。
+   オンラインランキングにはサーバーAPIの設定が必要です。
+  </p>
+  <div class="row">
+   <input id="playerName" maxlength="20" placeholder="プレイヤー名">
+   <button class="primary" id="saveRanking">SAVE SCORE</button>
+  </div>
+  <div id="rankingList"></div>
+ </div>
+</section>
+
+<!-- SAVES -->
+
+<section class="page" id="page-saves">
+ <div class="glass panel">
+  <h2>💾 Save Manager</h2>
+  <p class="muted">各ゲームのセーブデータは独立して管理されます。</p>
+  <div id="saveList"></div>
+  <div class="gameControls">
+   <button id="exportSave">⬇ EXPORT JSON</button>
+   <button id="importSave">⬆ IMPORT JSON</button>
+   <input type="file" id="importFile" accept=".json,application/json" class="hidden">
+  </div>
+ </div>
+</section>
+
+<div class="footer">
+ OMNI-VERSE 2.0 · PROCEDURAL UNIVERSE ENGINE<br>
+ Infinite worlds. Infinite possibilities.<br>
+ © 2026 OMNI-VERSE
+</div>
+
+</div>
+</main>
+
+<script>
+"use strict";
+
+/* =========================================
+   STORAGE & GAME DATA
+========================================= */
+
+const STORAGE_KEY="OMNIVERSE_V2_SAVE";
+
+const DEFAULT_DATA={
+ version:2,
+ seed:"OMNI-VERSE-001",
+ worlds:0,
+ player:{
+  level:1,xp:0,energy:100,credits:0,
+  inventory:{},
+  explored:0
+ },
+ discovered:[],
+ achievements:[],
+ scores:[],
+ saves:{
+  puzzle:{score:0,moves:0,games:0},
+  action:{score:0,games:0},
+  rpg:{explored:0}
+ }
+};
+
+function loadData(){
+ try{
+  const raw=localStorage.getItem(STORAGE_KEY);
+  if(!raw)return structuredClone(DEFAULT_DATA);
+  const d=JSON.parse(raw);
+  if(!d||typeof d!=="object"||!d.player||!d.saves)
+   throw new Error("Invalid save");
+  return {
+   ...structuredClone(DEFAULT_DATA),
+   ...d,
+   player:{...DEFAULT_DATA.player,...d.player},
+   saves:{...DEFAULT_DATA.saves,...d.saves}
+  };
+ }catch(e){
+  return structuredClone(DEFAULT_DATA);
+ }
+}
+
+let data=loadData();
+
+function save(){
+ try{
+  localStorage.setItem(STORAGE_KEY,JSON.stringify(data));
+ }catch(e){
+  setStatus("保存容量が不足しています。不要なデータを整理してください。");
+ }
+ updateUI();
+}
+
+function $(id){return document.getElementById(id)}
+
+function setStatus(message){
+ const el=$("gameStatus");
+ if(el)el.textContent=message;
+}
+
+function updateUI(){
+ $("statWorlds").textContent=data.worlds.toLocaleString();
+ $("statLevel").textContent=data.player.level;
+ $("statPlanets").textContent=data.discovered.length;
+ $("statAchievements").textContent=data.achievements.length;
+ $("playerLevel").textContent="LEVEL "+data.player.level;
+ $("playerXP").textContent=data.player.xp+" XP";
+ $("rpgEnergy").textContent=data.player.energy;
+ $("rpgCredits").textContent=data.player.credits;
+ $("xpBar").style.width=
+  (data.player.xp/xpNeeded()*100)+"%";
+ $("inventory").innerHTML=Object.entries(data.player.inventory)
+  .map(([k,v])=>`<div class="listItem"><span>${escapeHTML(k)}</span><b>${v}</b></div>`)
+  .join("")||'<p class="muted">アイテムはまだありません。</p>';
+ renderAchievements();
+ renderPlanets();
+ renderEncyclopedia();
+ renderRanking();
+ renderSaves();
+}
+
+function escapeHTML(str){
+ return String(str).replace(/[&<>"']/g,c=>({
+  "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+ }[c]));
+}
+
+/* =========================================
+   DETERMINISTIC RANDOM GENERATOR
+========================================= */
+
+function hash(str){
+ let h=2166136261;
+ for(let i=0;i<str.length;i++){
+  h^=str.charCodeAt(i);
+  h=Math.imul(h,16777619);
+ }
+ return h>>>0;
+}
+
+function mulberry(seed){
+ return function(){
+  let t=seed+=0x6D2B79F5;
+  t=Math.imul(t^t>>>15,t|1);
+  t^=t+Math.imul(t^t>>>7,t|61);
+  return ((t^t>>>14)>>>0)/4294967296;
+ };
+}
+
+let worldRandom=mulberry(hash(data.seed));
+
+function makeRng(seed){
+ return mulberry(hash(String(seed)));
+}
+
+function randomInt(rng,min,max){
+ return Math.floor(rng()*(max-min+1))+min;
+}
+
+function choose(rng,array){
+ return array[Math.floor(rng()*array.length)];
+}
+
+function makeSeed(){
+ if(crypto&&crypto.getRandomValues){
+  const a=new Uint32Array(2);
+  crypto.getRandomValues(a);
+  return "OMNI-"+a[0].toString(36)+"-"+a[1].toString(36);
+ }
+ return "OMNI-"+Date.now().toString(36);
+}
+
+/* =========================================
+   WORLD GENERATOR
+========================================= */
+
+let world={};
+
+function generateWorld(seed){
+ data.seed=String(seed).slice(0,64);
+ worldRandom=makeRng(data.seed);
+
+ world={
+  seed:data.seed,
+  hue:randomInt(worldRandom,0,359),
+  difficulty:randomInt(worldRandom,1,5),
+  name:choose(worldRandom,[
+   "Aether","Nexus","Eclipse","Nebula",
+   "Quantum","Celestia","Astralis","Nova"
+  ])+"-"+randomInt(worldRandom,100,999),
+  stars:Array.from({length:150},()=>({
+   x:worldRandom(),y:worldRandom(),
+   r:worldRandom()*2+0.4,
+   a:worldRandom()*.8+.2
+  }))
+ };
+
+ data.worlds++;
+ $("seedInput").value=data.seed;
+ $("currentSeed").textContent="SEED: "+data.seed;
+ $("worldName").textContent=world.name;
+ $("worldDescription").textContent=
+  "DIFFICULTY "+world.difficulty+
+  " · GALACTIC HUE "+world.hue+
+  " · PROCEDURAL ENVIRONMENT";
+
+ data.saves.rpg.seed=data.seed;
+ save();
+ drawRPG();
+ generatePlanet();
+}
+
+$("generate").onclick=()=>{
+ const s=$("seedInput").value.trim();
+ if(s)changeWorld(s);
+};
+
+$("randomSeed").onclick=()=>changeWorld(makeSeed());
+
+function changeWorld(seed){
+ stopAction();
+ generateWorld(seed);
+ generatePuzzle();
+ $("rpgStatus").textContent="新しい宇宙が生成されました。";
+}
+
+$("seedInput").value=data.seed;
+
+/* =========================================
+   NAVIGATION
+========================================= */
+
+function navigate(page){
+ document.querySelectorAll(".page").forEach(p=>{
+  p.classList.toggle("active",p.id==="page-"+page);
+ });
+ document.querySelectorAll(".navigation button").forEach(b=>{
+  b.classList.toggle("active",b.dataset.page===page);
+ });
+ if(page==="rpg")drawRPG();
+ if(page==="planets")drawPlanet();
+ if(page==="games")drawGame();
+}
+
+window.navigate=navigate;
+
+document.querySelectorAll(".navigation button").forEach(b=>{
+ b.onclick=()=>navigate(b.dataset.page);
+});
+
+/* =========================================
+   EXPERIENCE & ACHIEVEMENTS
+========================================= */
+
+function xpNeeded(){
+ return data.player.level*100;
+}
+
+function addXP(amount){
+ data.player.xp+=amount;
+ while(data.player.xp>=xpNeeded()){
+  data.player.xp-=xpNeeded();
+  data.player.level++;
+  data.player.energy=100;
+  $("rpgStatus").textContent="🎉 LEVEL UP! LEVEL "+data.player.level;
+  unlock("level"+data.player.level);
+ }
+ save();
+}
+
+const ACHIEVEMENTS=[
+ {id:"first_world",name:"First Universe",desc:"初めて宇宙を生成",icon:"🌌"},
+ {id:"first_planet",name:"First Contact",desc:"初めて惑星を発見",icon:"🪐"},
+ {id:"five_planets",name:"Explorer",desc:"5つの惑星を発見",icon:"🚀"},
+ {id:"ten_planets",name:"Galactic Pioneer",desc:"10の惑星を発見",icon:"🌠"},
+ {id:"level2",name:"Rookie",desc:"レベル2に到達",icon:"⭐"},
+ {id:"level5",name:"Veteran",desc:"レベル5に到達",icon:"👑"},
+ {id:"puzzle_win",name:"Puzzle Master",desc:"パズルを完全攻略",icon:"🧩"},
+ {id:"action_100",name:"Survivor",desc:"アクションで100点獲得",icon:"⚔️"},
+ {id:"ten_explore",name:"Space Traveler",desc:"10回探索",icon:"🛸"}
+];
+
+function unlock(id){
+ if(data.achievements.includes(id))return;
+ if(!ACHIEVEMENTS.some(a=>a.id===id))return;
+ data.achievements.push(id);
+ $("rpgStatus").textContent="🏆 ACHIEVEMENT UNLOCKED!";
+ save();
+}
+
+function checkAchievements(){
+ if(data.worlds>=1)unlock("first_world");
+ if(data.discovered.length>=1)unlock("first_planet");
+ if(data.discovered.length>=5)unlock("five_planets");
+ if(data.discovered.length>=10)unlock("ten_planets");
+ if(data.player.level>=2)unlock("level2");
+ if(data.player.level>=5)unlock("level5");
+ if(data.player.explored>=10)unlock("ten_explore");
+}
+
+function renderAchievements(){
+ $("achievementList").innerHTML=ACHIEVEMENTS.map(a=>{
+  const done=data.achievements.includes(a.id);
+  return `<div class="listItem">
+   <span>${a.icon} ${a.name}<br>
+   <small class="muted">${a.desc}</small></span>
+   <span class="badge">${done?"UNLOCKED":"LOCKED"}</span>
+  </div>`;
+ }).join("");
+}
+
+/* =========================================
+   PLANET GENERATION & VISUALIZATION
+========================================= */
+
+let planet={};
+let planetRotation=0;
+
+const PLANET_TYPES=[
+ "Oceanic","Desert","Ice","Volcanic",
+ "Forest","Crystal","Gas Giant","Lava"
+];
+
+function generatePlanet(){
+ const rng=makeRng(data.seed+"-PLANET-"+data.discovered.length+
+  "-"+(data.saves.rpg.planetIndex||0));
+
+ const type=choose(rng,PLANET_TYPES);
+ planet={
+  id:data.seed+"-"+(data.saves.rpg.planetIndex||0),
+  name:choose(rng,["Astra","Vega","Orion","Lyra","Zeta","Eos","Kronos"])
+    +"-"+randomInt(rng,100,999),
+  type,
+  hue:randomInt(rng,0,359),
+  size:randomInt(rng,50,100),
+  moons:randomInt(rng,0,4),
+  temperature:randomInt(rng,-180,450),
+  atmosphere:choose(rng,["Oxygen","Methane","Nitrogen","Carbon dioxide"]),
+  seed:data.seed
+ };
+ drawPlanet();
+}
+
+function drawSphere(c,x,y,r,hue,rotation,detail){
+ const grad=c.createRadialGradient(
+  x-r*.35,y-r*.4,r*.03,x,y,r
+ );
+ grad.addColorStop(0,`hsl(${hue},80%,78%)`);
+ grad.addColorStop(.4,`hsl(${hue},65%,48%)`);
+ grad.addColorStop(1,`hsl(${hue},70%,12%)`);
+
+ c.save();
+ c.shadowColor=`hsl(${hue},90%,60%)`;
+ c.shadowBlur=35;
+ c.fillStyle=grad;
+ c.beginPath();
+ c.arc(x,y,r,0,Math.PI*2);
+ c.fill();
+ c.shadowBlur=0;
+ c.clip();
+
+ for(let i=0;i<detail;i++){
+  const yy=y-r+(i/detail)*r*2;
+  const wave=Math.sin(i*.7+rotation)*r*.15;
+  c.fillStyle=`hsla(${hue+25},70%,${30+(i%3)*12}%,.18)`;
+  c.beginPath();
+  c.ellipse(x+wave,yy,r*.95,r*.045,rotation*.1,0,Math.PI*2);
+  c.fill();
+ }
+
+ const shade=c.createLinearGradient(x-r,y,x+r,y);
+ shade.addColorStop(0,"#0008");
+ shade.addColorStop(.45,"#0000");
+ shade.addColorStop(1,"#0009");
+ c.fillStyle=shade;
+ c.fillRect(x-r,y-r,r*2,r*2);
+ c.restore();
+}
+
+function drawPlanet(){
+ const c=$("planetCanvas").getContext("2d");
+ const w=900,h=500;
+ c.clearRect(0,0,w,h);
+ const bg=c.createLinearGradient(0,0,w,h);
+ bg.addColorStop(0,"#101d3d");
+ bg.addColorStop(1,"#070b1b");
+ c.fillStyle=bg;c.fillRect(0,0,w,h);
+
+ const rng=makeRng(planet.id);
+ for(let i=0;i<120;i++){
+  c.fillStyle=`rgba(255,255,255,${rng()*.8})`;
+  c.beginPath();
+  c.arc(rng()*w,rng()*h,rng()*2,0,Math.PI*2);
+  c.fill();
+ }
+
+ const x=450,y=250,r=145;
+
+ if(planet.type==="Gas Giant"){
+  c.save();
+  c.strokeStyle="#d7c3ff88";
+  c.lineWidth=15;
+  c.beginPath();
+  c.ellipse(x,y,r*1.7,r*.45,-.25,0,Math.PI*2);
+  c.stroke();
+  c.restore();
+ }
+
+ drawSphere(c,x,y,r,planet.hue,planetRotation,35);
+
+ for(let i=0;i<planet.moons;i++){
+  const angle=planetRotation+i*Math.PI*2/Math.max(1,planet.moons);
+  const mx=x+Math.cos(angle)*225;
+  const my=y+Math.sin(angle)*75;
+  c.fillStyle="#cbd5e8";
+  c.beginPath();
+  c.arc(mx,my,10,0,Math.PI*2);
+  c.fill();
+ }
+
+ planetRotation+=.006;
+
+ $("planetName").textContent=planet.name;
+ $("planetDetails").textContent=
+  planet.type+" · "+planet.temperature+"°C · "+
+  planet.atmosphere+" · "+planet.moons+" MOONS · SEED "+planet.seed;
+}
+
+$("nextPlanet").onclick=()=>{
+ data.saves.rpg.planetIndex=(data.saves.rpg.planetIndex||0)+1;
+ generatePlanet();
+ save();
+};
+
+$("discoverPlanet").onclick=()=>{
+ if(data.discovered.some(p=>p.id===planet.id)){
+  $("planetDetails").textContent="この惑星はすでに発見済みです。";
+  return;
+ }
+
+ data.discovered.push({...planet});
+ data.player.credits+=25;
+ addXP(30);
+ checkAchievements();
+ save();
+ $("planetDetails").textContent="✨ 惑星を発見！ +30 XP / +25 CREDITS";
+};
+
+function renderPlanets(){
+ $("planetGrid").innerHTML=data.discovered.map(p=>`
+ <div class="glass planetCard">
+  <div class="planetOrb" style="background:radial-gradient(circle at 30% 30%,hsl(${p.hue},80%,80%),hsl(${p.hue},65%,30%) 55%,#050815)"></div>
+  <strong>${escapeHTML(p.name)}</strong>
+  <small>${escapeHTML(p.type)}</small>
+ </div>`).join("")||'<p class="muted">まだ惑星を発見していません。</p>';
+}
+
+function renderEncyclopedia(){
+ $("encyclopediaPlanets").innerHTML=data.discovered.map(p=>
+  `<div class="listItem"><span>🪐 ${escapeHTML(p.name)}</span><span>${escapeHTML(p.type)}</span></div>`
+ ).join("")||'<p class="muted">未発見</p>';
+
+ $("encyclopediaItems").innerHTML=Object.entries(data.player.inventory)
+ .map(([k,v])=>`<div class="listItem"><span>💎 ${escapeHTML(k)}</span><b>${v}</b></div>`)
+ .join("")||'<p class="muted">未収集</p>';
+}
+
+/* =========================================
+   SPACE RPG
+========================================= */
+
+const rpgCanvas=$("rpgCanvas");
+const rc=rpgCanvas.getContext("2d");
+
+function drawRPG(){
+ const w=900,h=500;
+ const rng=makeRng(data.seed+"-RPG");
+ rc.fillStyle="#080d20";rc.fillRect(0,0,w,h);
+
+ for(let i=0;i<150;i++){
+  rc.fillStyle="rgba(255,255,255,.6)";
+  rc.beginPath();
+  rc.arc(rng()*w,rng()*h,rng()*2,0,Math.PI*2);
+  rc.fill();
+ }
+
+ const hue=world.hue||200;
+ drawSphere(rc,450,245,120,hue,planetRotation,25);
+
+ rc.fillStyle="#fff";
+ rc.font="bold 20px sans-serif";
+ rc.textAlign="center";
+ rc.fillText("COSMIC EXPLORATION",450,45);
+ rc.font="14px sans-serif";
+ rc.fillStyle="#aebce0";
+ rc.fillText("LEVEL "+data.player.level+" · "+data.player.explored+" MISSIONS",450,420);
+}
+
+$("exploreBtn").onclick=()=>{
+ if(data.player.energy<15){
+  $("rpgStatus").textContent="エネルギー不足です。回復してください。";
+  return;
+ }
+
+ data.player.energy-=15;
+ data.player.explored++;
+ data.player.credits+=10;
+
+ const rng=makeRng(data.seed+"-MISSION-"+data.player.explored);
+ const item=choose(rng,[
+  "Quantum Crystal","Stellar Ore","Ancient Relic",
+  "Nebula Fragment","Cosmic Core"
+ ]);
+
+ data.player.inventory[item]=(data.player.inventory[item]||0)+1;
+
+ addXP(25);
+ checkAchievements();
+ save();
+
+ $("rpgStatus").textContent=
+  "🚀 探索成功！ +25 XP / +10 CREDITS / "+item+" ×1";
+
+ data.saves.rpg.explored=data.player.explored;
+ drawRPG();
+};
+
+$("healBtn").onclick=()=>{
+ if(data.player.credits<20){
+  $("rpgStatus").textContent="クレジットが不足しています。";
+  return;
+ }
+ data.player.credits-=20;
+ data.player.energy=Math.min(100,data.player.energy+40);
+ save();
+ $("rpgStatus").textContent="⚡ ENERGY RESTORED";
+};
+
+/* =========================================
+   PUZZLE GAME
+========================================= */
+
+const gameCanvas=$("gameCanvas");
+const gc=gameCanvas.getContext("2d");
+const GW=900,GH=600;
+let gameMode="puzzle";
+let tiles=[];
+let selected=null;
+let puzzleDone=false;
+let puzzleScore=0;
+let puzzleMoves=0;
+
+const tileColors=[
+ "#8b7dff","#53dce9","#f17dc9",
+ "#ffca75","#70e4a2","#ff817f"
+];
+
+function generatePuzzle(){
+ const rng=makeRng(data.seed+"-PUZZLE");
+ tiles=[];
+ selected=null;
+ puzzleDone=false;
+ puzzleScore=0;
+ puzzleMoves=0;
+
+ for(let color=0;color<6;color++){
+  for(let pair=0;pair<5;pair++){
+   tiles.push({color,active:true});
+   tiles.push({color,active:true});
+  }
+ }
+
+ for(let i=tiles.length-1;i>0;i--){
+  const j=Math.floor(rng()*(i+1));
+  [tiles[i],tiles[j]]=[tiles[j],tiles[i]];
+ }
+
+ drawGame();
+}
+
+function drawGame(){
+ gc.fillStyle="#090e20";gc.fillRect(0,0,GW,GH);
+
+ const rng=makeRng(data.seed+"-STARS");
+ for(let i=0;i<120;i++){
+  gc.fillStyle="rgba(255,255,255,.4)";
+  gc.fillRect(rng()*GW,rng()*GH,2,2);
+ }
+
+ if(gameMode==="puzzle"){
+  const size=70,gap=12;
+  const sx=(GW-(6*size+5*gap))/2;
+  const sy=(GH-(5*size+4*gap))/2;
+
+  tiles.forEach((t,i)=>{
+   if(!t.active)return;
+   const x=sx+(i%6)*(size+gap);
+   const y=sy+Math.floor(i/6)*(size+gap);
+   gc.fillStyle=tileColors[t.color];
+   gc.shadowColor=tileColors[t.color];
+   gc.shadowBlur=selected===i?24:7;
+   gc.beginPath();
+   gc.roundRect(x,y,size,size,12);
+   gc.fill();
+   gc.shadowBlur=0;
+   if(selected===i){
+    gc.strokeStyle="#fff";gc.lineWidth=4;
+    gc.stroke();
+   }
+   gc.fillStyle="#fff";
+   gc.font="bold 29px sans-serif";
+   gc.textAlign="center";
+   gc.fillText(["✦","◆","●","⬟","✧","■"][t.color],x+35,y+44);
+  });
+
+  gc.fillStyle="#fff";
+  gc.font="bold 19px sans-serif";
+  gc.fillText("SCORE "+puzzleScore+"   MOVES "+puzzleMoves,450,35);
+ }else{
+  drawAction();
+ }
+}
+
+function puzzleClick(x,y){
+ if(puzzleDone)return;
+
+ const size=70,gap=12;
+ const sx=(GW-(6*size+5*gap))/2;
+ const sy=(GH-(5*size+4*gap))/2;
+ const col=Math.floor((x-sx)/(size+gap));
+ const row=Math.floor((y-sy)/(size+gap));
+ if(col<0||col>=6||row<0||row>=5)return;
+
+ const i=row*6+col;
+ if(!tiles[i].active)return;
+
+ if(selected===null){
+  selected=i;drawGame();return;
+ }
+
+ if(selected===i){
+  selected=null;drawGame();return;
+ }
+
+ const a=tiles[selected],b=tiles[i];
+ puzzleMoves++;
+
+ if(a.color===b.color){
+  a.active=false;b.active=false;
+  puzzleScore+=100;
+  $("gameStatus").textContent="✨ MATCH! +100";
+  if(tiles.every(t=>!t.active)){
+   puzzleDone=true;
+   puzzleScore+=500;
+   data.saves.puzzle.score=Math.max(data.saves.puzzle.score,puzzleScore);
+   data.saves.puzzle.games++;
+   unlock("puzzle_win");
+   addXP(50);
+   recordScore("puzzle",puzzleScore);
+   save();
+   $("gameStatus").textContent="🏆 PERFECT CLEAR! +500";
+  }
+ }else{
+  $("gameStatus").textContent="違う色です。もう一度！";
+ }
+ selected=null;
+ data.saves.puzzle.moves=puzzleMoves;
+ drawGame();
+}
+
+function startGame(type){
+ gameMode=type;
+ stopAction();
+
+ $("gameTitle").textContent=type==="puzzle"?
+  "🧩 Quantum Puzzle":"🚀 Cosmic Survivor";
+
+ $("dpad").classList.toggle("hidden",type!=="action");
+ $("pauseGame").classList.toggle("hidden",type!=="action");
+
+ if(type==="puzzle"){
+  generatePuzzle();
+  $("gameStatus").textContent="同じ色のタイルを2枚選択してください。";
+ }else{
+  resetAction();
+  $("gameStatus").textContent="STARTを押してください。";
+ }
+ navigate("games");
+}
+
+$("restartGame").onclick=()=>{
+ if(gameMode==="puzzle")generatePuzzle();
+ else{resetAction();startAction();}
+};
+
+$("hintGame").onclick=()=>{
+ if(gameMode!=="puzzle")return;
+ const i=tiles.findIndex(t=>t.active);
+ if(i>=0){
+  selected=i;
+  drawGame();
+  $("gameStatus").textContent="光るタイルと同じ色を探してください。";
+ }
+};
+
+gameCanvas.addEventListener("pointerdown",e=>{
+ const r=gameCanvas.getBoundingClientRect();
+ const x=(e.clientX-r.left)*GW/r.width;
+ const y=(e.clientY-r.top)*GH/r.height;
+ if(gameMode==="puzzle")puzzleClick(x,y);
+});
+
+/* =========================================
+   ACTION GAME
+========================================= */
+
+let player={x:450,y:300,r:17};
+let enemies=[];
+let orbs=[];
+let actionScore=0;
+let actionRunning=false;
+let actionOver=false;
+let actionFrame=0;
+let actionKeys={};
+let touchDir={x:0,y:0};
+let lastActionTime=0;
+
+function resetAction(){
+ player={x:450,y:300,r:17};
+ enemies=[];
+ orbs=[];
+ actionScore=0;
+ actionFrame=0;
+ actionOver=false;
+ actionRunning=false;
+ touchDir={x:0,y:0};
+ for(let i=0;i<5;i++)spawnOrb();
+ drawGame();
+}
+
+function spawnOrb(){
+ const rng=makeRng(data.seed+"-ORB-"+actionFrame+"-"+orbs.length);
+ orbs.push({x:40+rng()*820,y:40+rng()*520,r:9});
+}
+
+function spawnEnemy(){
+ const rng=makeRng(data.seed+"-ENEMY-"+actionFrame);
+ const side=Math.floor(rng()*4);
+ enemies.push({
+  x:side===0?0:side===1?900:rng()*900,
+  y:side===2?0:side===3?600:rng()*600,
+  speed:1.2+rng()*1.5+world.difficulty*.15,
+  r:15+rng()*7
+ });
+}
+
+function drawAction(){
+ gc.fillStyle="#080d20";gc.fillRect(0,0,GW,GH);
+ gc.fillStyle="#fff";
+ gc.font="bold 18px sans-serif";
+ gc.textAlign="left";
+ gc.fillText("ENERGY "+actionScore,22,32);
+
+ orbs.forEach(o=>{
+  gc.shadowColor="#55e9ee";gc.shadowBlur=20;
+  gc.fillStyle="#55e9ee";
+  gc.beginPath();gc.arc(o.x,o.y,o.r,0,Math.PI*2);gc.fill();
+  gc.shadowBlur=0;
+ });
+
+ enemies.forEach(e=>{
+  gc.fillStyle="#fa678c";
+  gc.shadowColor="#fa678c";gc.shadowBlur=15;
+  gc.beginPath();gc.arc(e.x,e.y,e.r,0,Math.PI*2);gc.fill();
+  gc.shadowBlur=0;
+ });
+
+ gc.fillStyle="#c3baff";
+ gc.shadowColor="#9385ff";gc.shadowBlur=25;
+ gc.beginPath();gc.arc(player.x,player.y,player.r,0,Math.PI*2);gc.fill();
+ gc.shadowBlur=0;
+
+ if(!actionRunning){
+  gc.textAlign="center";gc.fillStyle="#fff";
+  gc.font="bold 26px sans-serif";
+  gc.fillText(actionOver?"GAME OVER":"COSMIC SURVIVOR",450,280);
+  gc.font="15px sans-serif";
+  gc.fillText("START / NEW GAME",450,320);
+ }
+}
+
+function updateAction(dt){
+ if(!actionRunning||actionOver)return;
+ const f=Math.min(dt/16.67,2);
+ actionFrame++;
+
+ let dx=0,dy=0;
+ if(actionKeys.ArrowLeft||actionKeys.a)dx--;
+ if(actionKeys.ArrowRight||actionKeys.d)dx++;
+ if(actionKeys.ArrowUp||actionKeys.w)dy--;
+ if(actionKeys.ArrowDown||actionKeys.s)dy++;
+
+ dx+=touchDir.x;dy+=touchDir.y;
+ const len=Math.hypot(dx,dy)||1;
+ player.x+=dx/len*4*f;
+ player.y+=dy/len*4*f;
+ player.x=Math.max(17,Math.min(883,player.x));
+ player.y=Math.max(17,Math.min(583,player.y));
+
+ if(actionFrame%75===0)spawnEnemy();
+ if(actionFrame%150===0&&orbs.length<8)spawnOrb();
+
+ enemies.forEach(e=>{
+  const vx=player.x-e.x,vy=player.y-e.y;
+  const d=Math.hypot(vx,vy)||1;
+  e.x+=vx/d*e.speed*f;
+  e.y+=vy/d*e.speed*f;
+  if(d<player.r+e.r-3){
+   actionOver=true;
+   actionRunning=false;
+   data.saves.action.games++;
+   data.saves.action.score=Math.max(data.saves.action.score,actionScore);
+   recordScore("action",actionScore);
+   if(actionScore>=100)unlock("action_100");
+   save();
+   $("gameStatus").textContent="GAME OVER · "+actionScore;
+  }
+ });
+
+ for(let i=orbs.length-1;i>=0;i--){
+  const o=orbs[i];
+  if(Math.hypot(player.x-o.x,player.y-o.y)<player.r+o.r){
+   orbs.splice(i,1);
+   actionScore+=10;
+   data.saves.action.score=Math.max(data.saves.action.score,actionScore);
+   if(orbs.length<5)spawnOrb();
+   if(actionScore>=100)unlock("action_100");
+  }
+ }
+}
+
+function startAction(){
+ if(actionOver)resetAction();
+ actionRunning=true;
+}
+
+function stopAction(){actionRunning=false}
+
+$("pauseGame").onclick=()=>{
+ actionRunning=false;
+ $("gameStatus").textContent="PAUSED";
+};
+
+$("dpad").querySelectorAll("button").forEach(b=>{
+ const dir=b.dataset.dir;
+ const map={
+  up:{x:0,y:-1},down:{x:0,y:1},
+  left:{x:-1,y:0},right:{x:1,y:0}
+ };
+ b.addEventListener("pointerdown",e=>{
+  e.preventDefault();
+  touchDir=map[dir];
+  b.setPointerCapture(e.pointerId);
+  startAction();
+ });
+ const release=()=>touchDir={x:0,y:0};
+ b.addEventListener("pointerup",release);
+ b.addEventListener("pointercancel",release);
+ b.addEventListener("lostpointercapture",release);
+});
+
+window.addEventListener("keydown",e=>{
+ actionKeys[e.key]=true;
+});
+window.addEventListener("keyup",e=>{
+ actionKeys[e.key]=false;
+});
+window.addEventListener("blur",()=>{
+ actionKeys={};touchDir={x:0,y:0};stopAction();
+});
+
+function loop(t){
+ const dt=lastActionTime?Math.min(t-lastActionTime,50):16.67;
+ lastActionTime=t;
+ if(gameMode==="action"){
+  updateAction(dt);
+  drawAction();
+ }
+ drawPlanet();
+ requestAnimationFrame(loop);
+}
+
+/* =========================================
+   SCORE & LOCAL LEADERBOARD
+========================================= */
+
+function recordScore(type,score){
+ if(score<=0)return;
+ data.scores.push({
+  type,
+  score,
+  date:new Date().toISOString(),
+  seed:data.seed
+ });
+ data.scores.sort((a,b)=>b.score-a.score);
+ data.scores=data.scores.slice(0,100);
+ save();
+}
+
+$("saveRanking").onclick=()=>{
+ const name=$("playerName").value.trim()||"Explorer";
+ const score=data.scores.reduce((a,b)=>Math.max(a,b.score),0);
+ if(score<=0){
+  $("rankingList").textContent="まだスコアがありません。";
+  return;
+ }
+ data.scores.push({
+  type:"manual",
+  score,
+  name:name.slice(0,20),
+  date:new Date().toISOString(),
+  seed:data.seed
+ });
+ data.scores.sort((a,b)=>b.score-a.score);
+ data.scores=data.scores.slice(0,100);
+ save();
+};
+
+function renderRanking(){
+ const entries=data.scores.slice(0,20);
+ $("rankingList").innerHTML=entries.map((s,i=>`
+  <div class="listItem">
+   <span>${i+1}. ${escapeHTML(s.name||"Explorer")}
+   <small class="muted"> ${escapeHTML(s.type)}</small></span>
+   <b>${s.score.toLocaleString()}</b>
+  </div>`).join("")||'<p class="muted">ランキングデータはありません。</p>';
+}
+
+/* =========================================
+   INDIVIDUAL GAME SAVES
+========================================= */
+
+function renderSaves(){
+ const saves=data.saves;
+ $("saveList").innerHTML=Object.entries(saves).map(([k,v])=>`
+  <div class="listItem">
+   <span><b>${escapeHTML(k.toUpperCase())}</b><br>
+   <small class="muted">${escapeHTML(JSON.stringify(v))}</small></span>
+   <span class="badge">SAVED</span>
+  </div>`).join("");
+}
+
+$("exportSave").onclick=()=>{
+ const blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json"});
+ const url=URL.createObjectURL(blob);
+ const a=document.createElement("a");
+ a.href=url;a.download="omni-verse-save.json";
+ a.click();
+ URL.revokeObjectURL(url);
+};
+
+$("importSave").onclick=()=>$("importFile").click();
+
+$("importFile").onchange=async e=>{
+ const file=e.target.files[0];
+ if(!file)return;
+ try{
+  if(file.size>5*1024*1024)throw new Error("ファイルが大きすぎます");
+  const imported=JSON.parse(await file.text());
+  if(imported.version!==2||!imported.player||!imported.saves||
+     !Array.isArray(imported.discovered)||
+     !Array.isArray(imported.achievements)||
+     !Array.isArray(imported.scores)){
+   throw new Error("無効なセーブデータです");
+  }
+  data={
+   ...structuredClone(DEFAULT_DATA),
+   ...imported,
+   player:{...DEFAULT_DATA.player,...imported.player},
+   saves:{...DEFAULT_DATA.saves,...imported.saves}
+  };
+  generateWorld(data.seed);
+  save();
+  $("gameStatus").textContent="セーブデータを読み込みました。";
+ }catch(err){
+  alert("読み込みエラー: "+err.message);
+ }
+ e.target.value="";
+};
+
+/* =========================================
+   ONLINE LEADERBOARD ADAPTER
+========================================= */
+
+/*
+  オンラインランキングを使う場合:
+  1. 自分のサーバーにランキングAPIを設置
+  2. API_BASEにHTTPSのURLを設定
+  3. サーバー側でユーザー認証とスコア検証を行う
+
+  このHTML単独ではオンライン共有されません。
+*/
+
+const ONLINE_CONFIG={
+ enabled:false,
+ apiBase:""
+};
+
+async function submitOnlineScore(entry){
+ if(!ONLINE_CONFIG.enabled||!ONLINE_CONFIG.apiBase){
+  return {ok:false,message:"オンラインAPI未設定"};
+ }
+ try{
+  const response=await fetch(
+   ONLINE_CONFIG.apiBase+"/scores",
+   {
+    method:"POST",
+    headers:{"Content-Type":"application/json"},
+    body:JSON.stringify(entry)
+   }
+  );
+  if(!response.ok)throw new Error("API error "+response.status);
+  return {ok:true,data:await response.json()};
+ }catch(error){
+  return {ok:false,message:error.message};
+ }
+}
+
+async function fetchOnlineRanking(){
+ if(!ONLINE_CONFIG.enabled||!ONLINE_CONFIG.apiBase)return null;
+ try{
+  const response=await fetch(ONLINE_CONFIG.apiBase+"/scores");
+  if(!response.ok)throw new Error("API error");
+  return await response.json();
+ }catch(error){
+  return null;
+ }
+}
+
+/* =========================================
+   INITIALIZATION
+========================================= */
+
+function init(){
+ generateWorld(data.seed);
+ generatePuzzle();
+ updateUI();
+ $("playerName").value="Explorer";
+ requestAnimationFrame(loop);
+}
+
+init();
+
+</script>
+</body>
+</html>
