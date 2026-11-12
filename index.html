@@ -1,1428 +1,1157 @@
-
 <!DOCTYPE html>
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<meta name="theme-color" content="#080b18">
-<title>OMNI-VERSE 2.0 | Infinite Worlds</title>
-
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>OMNI-VERSE — 10,000,000 Universes</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Outfit:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script>
+tailwind.config = {
+  theme: {
+    extend: {
+      fontFamily: {
+        outfit: ['Outfit', 'sans-serif'],
+        jakarta: ['Plus Jakarta Sans', 'sans-serif'],
+        mono: ['JetBrains Mono', 'monospace'],
+      },
+      colors: {
+        omni: {
+          gold: '#F5C518',
+          goldDark: '#C9A227',
+          void: '#050508',
+          glass: 'rgba(255,255,255,0.06)',
+        }
+      },
+      boxShadow: {
+        'glass': 'inset 0 1px 1px rgba(255,255,255,0.12), inset 0 -1px 1px rgba(0,0,0,0.2), 0 8px 32px rgba(0,0,0,0.4)',
+        'glass-lg': 'inset 0 1px 2px rgba(255,255,255,0.15), inset 0 -1px 2px rgba(0,0,0,0.25), 0 20px 60px rgba(0,0,0,0.5)',
+        'gold-glow': '0 0 20px rgba(245,197,24,0.35), 0 0 40px rgba(245,197,24,0.15)',
+      }
+    }
+  }
+}
+</script>
 <style>
-:root {
-  --bg:#080b18;
-  --panel:rgba(23,31,55,.82);
-  --line:rgba(255,255,255,.12);
-  --text:#f4f5ff;
-  --muted:#9ba8c7;
-  --purple:#9385ff;
-  --cyan:#53dce9;
-  --pink:#f58bd5;
-  --gold:#ffd37d;
-}
-*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-body{
- margin:0;color:var(--text);
- font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
- background:
- radial-gradient(ellipse at 15% 5%,#24205b 0,transparent 40%),
- radial-gradient(ellipse at 90% 50%,#102e4b 0,transparent 40%),
- var(--bg);
- min-height:100vh;
-}
-button,input{font:inherit}
-button{
- color:white;background:rgba(255,255,255,.07);
- border:1px solid var(--line);border-radius:12px;
- padding:11px 15px;cursor:pointer;
- transition:.2s;
-}
-button:hover{background:rgba(255,255,255,.15)}
-button:active{transform:scale(.97)}
-button:disabled{opacity:.4;cursor:not-allowed}
-.header{
- position:fixed;top:0;left:0;right:0;height:72px;
- z-index:1000;padding:0 20px;
- display:flex;align-items:center;justify-content:space-between;
- background:rgba(8,11,24,.85);
- backdrop-filter:blur(25px);
- border-bottom:1px solid var(--line);
-}
-.brand{display:flex;align-items:center;gap:11px;font-weight:900;letter-spacing:2px}
-.logo{
- width:40px;height:40px;border-radius:14px;
- display:grid;place-items:center;font-size:25px;
- background:linear-gradient(135deg,#8375ff,#4bdbed);
-}
-.paypal{
- text-decoration:none;color:white;font-size:12px;font-weight:800;
- background:linear-gradient(135deg,#0878d2,#134ca7);
- padding:12px 15px;border-radius:25px;
- border:1px solid #62b8ff;
- white-space:nowrap;
-}
-main{padding:94px 0 40px}
-.container{width:min(1200px,calc(100% - 30px));margin:auto}
-.hero{padding:20px 0}
-.eyebrow{color:var(--cyan);font-size:11px;letter-spacing:3px;font-weight:800}
-h1{font-size:clamp(32px,6vw,58px);margin:12px 0}
-.gradient{
- background:linear-gradient(90deg,#a69aff,#62e5e8,#f28bd8);
- color:transparent;background-clip:text;
-}
-.muted{color:var(--muted);font-size:13px;line-height:1.7}
-.glass{
- background:var(--panel);backdrop-filter:blur(20px);
- border:1px solid var(--line);border-radius:20px;
- box-shadow:0 18px 50px #0005;
-}
-.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:20px 0}
-.stat{padding:15px}
-.stat small{color:var(--muted);font-size:10px}
-.stat strong{display:block;font-size:23px;margin-top:6px}
-.navigation{
- display:flex;gap:8px;overflow-x:auto;padding:8px 0 16px;
- scrollbar-width:none;
-}
-.navigation button{flex-shrink:0;font-size:12px}
-.navigation button.active{background:linear-gradient(135deg,#7569ed,#398ecb)}
-.page{display:none}
-.page.active{display:block;animation:fade .3s}
-@keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
-.panel{padding:20px;margin-bottom:15px}
-h2{font-size:19px;margin:0 0 14px}
-h3{font-size:15px}
-input{
- color:white;background:#080e20;border:1px solid var(--line);
- border-radius:11px;padding:12px;min-width:0;
-}
-.row{display:flex;gap:9px;flex-wrap:wrap;align-items:center}
-.row input{flex:1}
-.primary{background:linear-gradient(135deg,#796cff,#368bdb);border:0;font-weight:800}
-.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
-.card{
- padding:17px;text-align:left;border-radius:16px;
- background:linear-gradient(145deg,#333c6a88,#111a3188);
- min-height:120px;
-}
-.card.selected{border-color:var(--purple)}
-.card .emoji{font-size:30px;margin-bottom:10px}
-.card strong{display:block}
-.card small{display:block;color:var(--muted);margin-top:7px;line-height:1.6}
-.canvasWrap{
- position:relative;overflow:hidden;border-radius:16px;
- background:#070b1a;border:1px solid var(--line);
- touch-action:none;
-}
-canvas{display:block;width:100%;height:auto;touch-action:none}
-.gameControls{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:14px}
-.status{text-align:center;color:var(--muted);font-size:12px;min-height:25px;margin-top:12px}
-.hidden{display:none!important}
-.planetGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
-.planetCard{padding:12px;text-align:center;cursor:pointer}
-.planetOrb{
- width:85px;height:85px;border-radius:50%;margin:5px auto 12px;
- box-shadow:inset -18px -10px 22px #0009,0 0 25px #8b83ff55;
-}
-.planetCard strong{font-size:12px}
-.planetCard small{display:block;color:var(--muted);margin-top:5px}
-.progress{height:9px;border-radius:10px;background:#ffffff17;overflow:hidden;margin:10px 0}
-.progress span{display:block;height:100%;background:linear-gradient(90deg,#8173ff,#55dce9)}
-.listItem{
- padding:13px;border-bottom:1px solid var(--line);
- display:flex;justify-content:space-between;gap:10px;
- font-size:13px;
-}
-.badge{
- display:inline-block;padding:5px 9px;border-radius:20px;
- background:#8375ff33;color:#c3bcff;font-size:10px;
-}
-.footer{text-align:center;padding:30px;color:#7c89a8;font-size:11px}
-#planetCanvas{width:100%;max-height:420px}
-@media(max-width:600px){
- .header{padding:0 10px;height:67px}
- .brand{font-size:12px;letter-spacing:1px}
- .logo{width:34px;height:34px}
- .paypal{font-size:10px;padding:10px}
- main{padding-top:80px}
- .stats{grid-template-columns:repeat(2,1fr)}
- .planetGrid{grid-template-columns:repeat(2,1fr)}
- .panel{padding:13px}
-}
+  :root {
+    --accent: #7c5cff;
+    --accent2: #00e5ff;
+    --bg: #050508;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    height: 100%;
+    overflow: hidden;
+    background: var(--bg);
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    color: #e8e8f0;
+    -webkit-font-smoothing: antialiased;
+  }
+  .glass {
+    background: linear-gradient(135deg, rgba(255,255,255,0.09) 0%, rgba(255,255,255,0.03) 100%);
+    backdrop-filter: blur(24px) saturate(180%);
+    -webkit-backdrop-filter: blur(24px) saturate(180%);
+    border: 1px solid rgba(255,255,255,0.12);
+    box-shadow: inset 0 1px 1px rgba(255,255,255,0.14), inset 0 -1px 1px rgba(0,0,0,0.25), 0 12px 40px rgba(0,0,0,0.45);
+  }
+  .glass-deep {
+    background: linear-gradient(160deg, rgba(255,255,255,0.11) 0%, rgba(255,255,255,0.02) 50%, rgba(0,0,0,0.15) 100%);
+    backdrop-filter: blur(32px) saturate(200%);
+    -webkit-backdrop-filter: blur(32px) saturate(200%);
+    border: 1px solid rgba(255,255,255,0.14);
+    box-shadow: inset 0 1px 2px rgba(255,255,255,0.18), inset 0 -2px 4px rgba(0,0,0,0.3), 0 25px 50px rgba(0,0,0,0.55);
+  }
+  .noise {
+    position: relative;
+  }
+  .noise::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    opacity: 0.035;
+    pointer-events: none;
+    mix-blend-mode: overlay;
+    border-radius: inherit;
+  }
+  .gold-btn {
+    background: linear-gradient(145deg, #F8D34A 0%, #E6B422 40%, #C9A227 100%);
+    color: #1a1400;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    box-shadow: 0 2px 0 #9a7b1a, 0 4px 12px rgba(245,197,24,0.35), inset 0 1px 0 rgba(255,255,255,0.4);
+    transition: all 0.2s cubic-bezier(0.22,1,0.36,1);
+  }
+  .gold-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 3px 0 #9a7b1a, 0 8px 24px rgba(245,197,24,0.45), inset 0 1px 0 rgba(255,255,255,0.5);
+  }
+  .gold-btn:active {
+    transform: translateY(1px);
+    box-shadow: 0 1px 0 #9a7b1a, 0 2px 8px rgba(245,197,24,0.3);
+  }
+  #gameCanvas {
+    display: block;
+    width: 100%;
+    height: 100%;
+    background: #000;
+  }
+  .hud-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    opacity: 0.55;
+  }
+  .hud-value {
+    font-family: 'Outfit', sans-serif;
+    font-weight: 600;
+    font-size: 18px;
+    letter-spacing: -0.02em;
+  }
+  .fade-in {
+    animation: fadeIn 0.6s cubic-bezier(0.22,1,0.36,1) forwards;
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .pulse-soft {
+    animation: pulseSoft 2.4s ease-in-out infinite;
+  }
+  @keyframes pulseSoft {
+    0%, 100% { opacity: 0.7; }
+    50% { opacity: 1; }
+  }
+  .world-input {
+    background: rgba(0,0,0,0.35);
+    border: 1px solid rgba(255,255,255,0.12);
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .world-input:focus {
+    outline: none;
+    border-color: rgba(255,255,255,0.28);
+    box-shadow: 0 0 0 3px rgba(255,255,255,0.06);
+  }
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 3px; }
 </style>
 </head>
+<body class="bg-[#050508] text-white select-none">
 
-<body>
+<!-- ROOT -->
+<div id="app" class="relative w-full h-full flex flex-col">
 
-<header class="header">
- <div class="brand">
-  <div class="logo">∞</div>
-  <div>OMNI-VERSE <span style="color:#8d85ff">2.0</span></div>
- </div>
- <a class="paypal"
- href="https://www.paypal.com/ncp/payment/W667YSCR59YEN"
- target="_blank" rel="noopener noreferrer">
- ☕ 開発者にコーヒーをプレゼント
- </a>
-</header>
+  <!-- HEADER -->
+  <header class="absolute top-0 left-0 right-0 z-50 px-4 sm:px-6 py-3 flex items-center justify-between pointer-events-none">
+    <div class="flex items-center gap-3 pointer-events-auto">
+      <div class="glass noise rounded-2xl px-4 py-2.5 flex items-center gap-3">
+        <div class="w-8 h-8 rounded-xl flex items-center justify-center" style="background: linear-gradient(135deg, var(--accent), var(--accent2));">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2"><circle cx="12" cy="12" r="3"/><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>
+        </div>
+        <div>
+          <div class="font-outfit font-semibold text-[15px] tracking-tight leading-none">OMNI-VERSE</div>
+          <div class="text-[10px] font-mono opacity-50 tracking-wider mt-0.5">10,000,000 UNIVERSES</div>
+        </div>
+      </div>
+    </div>
 
-<main>
-<div class="container">
+    <!-- PayPal Button -->
+    <div class="pointer-events-auto">
+      <a href="https://www.paypal.com/ncp/payment/W667YSCR59YEN" target="_blank" rel="noopener noreferrer"
+         class="gold-btn inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M20.067 8.478c.492.88.556 2.014.3 3.327-.74 3.806-3.276 5.12-6.514 5.12h-.5a.805.805 0 0 0-.794.68l-.04.22-.63 3.993-.028.154a.804.804 0 0 1-.794.68H7.72a.483.483 0 0 1-.477-.558L9.114 9.05a.986.986 0 0 1 .974-.84h3.403c1.288 0 2.366.13 3.246.52.88.39 1.55.99 2.01 1.748z"/><path d="M17.5 6.5c.3-.8.2-1.5-.1-2.1-.4-.8-1.1-1.4-2.1-1.8-.9-.3-2-.5-3.3-.5H7.2c-.5 0-.9.3-1 .8L4.1 15.3c0 .2.1.4.4.4h2.8l.7-4.4.1-.3c.1-.5.5-.8 1-.8h2.1c2.8 0 5-1.1 5.6-4.4.1-.3.1-.6.1-.8.2-.5.2-1 .1-1.5z"/></svg>
+        Support
+      </a>
+    </div>
+  </header>
 
-<section class="hero">
- <div class="eyebrow">INFINITE PROCEDURAL UNIVERSE</div>
- <h1>Explore <span class="gradient">Everything.</span></h1>
- <p class="muted">
-  1つのシードから無数の宇宙を生成。
-  惑星を発見し、文明を探索し、ゲームを攻略する。
-  あなただけの宇宙がここから始まる。
- </p>
-</section>
+  <!-- MAIN GAME AREA -->
+  <main class="flex-1 relative overflow-hidden">
+    <canvas id="gameCanvas"></canvas>
 
-<section class="stats">
- <div class="glass stat"><small>UNIVERSES</small><strong id="statWorlds">0</strong></div>
- <div class="glass stat"><small>PLAYER LEVEL</small><strong id="statLevel">1</strong></div>
- <div class="glass stat"><small>PLANETS FOUND</small><strong id="statPlanets">0</strong></div>
- <div class="glass stat"><small>ACHIEVEMENTS</small><strong id="statAchievements">0</strong></div>
-</section>
+    <!-- Overlay HUD -->
+    <div id="hud" class="absolute inset-0 pointer-events-none flex flex-col justify-between p-4 sm:p-6 pt-20">
+      <!-- Top HUD -->
+      <div class="flex justify-between items-start gap-4">
+        <div class="glass noise rounded-2xl px-4 py-3 min-w-[140px] fade-in">
+          <div class="hud-label">WORLD ID</div>
+          <div id="hudWorldId" class="hud-value font-mono text-[15px] mt-0.5">0000000</div>
+        </div>
+        <div class="glass noise rounded-2xl px-4 py-3 min-w-[120px] fade-in" style="animation-delay:0.05s">
+          <div class="hud-label">GENRE</div>
+          <div id="hudGenre" class="hud-value text-[15px] mt-0.5">—</div>
+        </div>
+        <div class="glass noise rounded-2xl px-4 py-3 min-w-[100px] text-right fade-in" style="animation-delay:0.1s">
+          <div class="hud-label">SCORE</div>
+          <div id="hudScore" class="hud-value mt-0.5">0</div>
+        </div>
+      </div>
 
-<nav class="navigation">
- <button class="active" data-page="home">🌌 HOME</button>
- <button data-page="games">🎮 GAMES</button>
- <button data-page="rpg">🚀 RPG</button>
- <button data-page="planets">🪐 PLANETS</button>
- <button data-page="collection">📚 ENCYCLOPEDIA</button>
- <button data-page="achievements">🏆 ACHIEVEMENTS</button>
- <button data-page="ranking">👑 RANKING</button>
- <button data-page="saves">💾 SAVES</button>
-</nav>
+      <!-- Bottom controls / info -->
+      <div class="flex flex-col sm:flex-row items-stretch sm:items-end justify-between gap-3">
+        <div class="glass noise rounded-2xl px-4 py-3 max-w-md fade-in" style="animation-delay:0.15s">
+          <div class="hud-label mb-1">PHYSICS · PALETTE · SCALE</div>
+          <div id="hudMeta" class="text-xs opacity-80 leading-relaxed font-mono"></div>
+        </div>
+        <div class="flex gap-2 pointer-events-auto">
+          <button id="btnMute" class="glass rounded-xl w-11 h-11 flex items-center justify-center hover:bg-white/10 transition" title="Mute">
+            <svg id="iconSound" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
+          </button>
+          <button id="btnRandom" class="glass rounded-xl px-4 h-11 flex items-center gap-2 text-sm font-medium hover:bg-white/10 transition">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 3h5v5M4 20L21 3M21 16v5h-5M15 15l6 6M4 4l5 5"/></svg>
+            Random
+          </button>
+        </div>
+      </div>
+    </div>
 
-<!-- HOME -->
-
-<section class="page active" id="page-home">
- <div class="glass panel">
-  <h2>🌌 Universe Generator</h2>
-  <p class="muted">シード値を入力して、自分だけの宇宙を生成。</p>
-  <div class="row">
-   <input id="seedInput" maxlength="64" placeholder="Universe Seed">
-   <button class="primary" id="generate">✨ GENERATE</button>
-   <button id="randomSeed">🎲 RANDOM</button>
-  </div>
-  <p class="muted" id="currentSeed"></p>
-  <h3 id="worldName">Unknown Universe</h3>
-  <p class="muted" id="worldDescription"></p>
- </div>
-
- <div class="glass panel">
-  <h2>✨ Quick Access</h2>
-  <div class="grid">
-   <button class="card" onclick="navigate('games')">
-    <div class="emoji">🧩</div><strong>Quantum Puzzle</strong>
-    <small>プロシージャルパズル</small>
-   </button>
-   <button class="card" onclick="navigate('rpg')">
-    <div class="emoji">🚀</div><strong>Space RPG</strong>
-    <small>惑星探索と冒険</small>
-   </button>
-   <button class="card" onclick="navigate('planets')">
-    <div class="emoji">🪐</div><strong>Planet Explorer</strong>
-    <small>惑星の生成と発見</small>
-   </button>
-   <button class="card" onclick="navigate('ranking')">
-    <div class="emoji">👑</div><strong>Leaderboard</strong>
-    <small>ランキングと記録</small>
-   </button>
-  </div>
- </div>
-</section>
-
-<!-- GAMES -->
-
-<section class="page" id="page-games">
- <div class="glass panel">
-  <h2>🎮 Game Center</h2>
-  <div class="grid">
-   <button class="card" onclick="startGame('puzzle')">
-    <div class="emoji">🧩</div><strong>Quantum Puzzle</strong>
-    <small>同じ色のタイルをペアにするパズル</small>
-   </button>
-   <button class="card" onclick="startGame('action')">
-    <div class="emoji">🚀</div><strong>Cosmic Survivor</strong>
-    <small>敵を避けてエネルギーを集める</small>
-   </button>
-  </div>
- </div>
-
- <div class="glass panel">
-  <h2 id="gameTitle">🧩 Quantum Puzzle</h2>
-  <div class="canvasWrap">
-   <canvas id="gameCanvas" width="900" height="600"></canvas>
-  </div>
-  <div class="gameControls" id="gameButtons">
-   <button class="primary" id="restartGame">↻ NEW GAME</button>
-   <button id="hintGame">💡 HINT</button>
-   <button id="pauseGame" class="hidden">Ⅱ PAUSE</button>
-  </div>
-  <div class="gameControls hidden" id="dpad">
-   <button data-dir="up">▲</button>
-   <button data-dir="left">◀</button>
-   <button data-dir="down">▼</button>
-   <button data-dir="right">▶</button>
-  </div>
-  <div class="status" id="gameStatus">ゲームを選択してください。</div>
- </div>
-</section>
-
-<!-- RPG -->
-
-<section class="page" id="page-rpg">
- <div class="glass panel">
-  <h2>🚀 Cosmic Explorer RPG</h2>
-  <div class="row">
-   <span class="badge" id="playerRank">SPACE EXPLORER</span>
-   <span class="muted" id="playerLevel">LEVEL 1</span>
-   <span class="muted" id="playerXP">0 XP</span>
-  </div>
-  <div class="progress"><span id="xpBar" style="width:0%"></span></div>
-  <div class="grid">
-   <div class="glass panel">
-    <small class="muted">ENERGY</small>
-    <h2 id="rpgEnergy">100</h2>
-   </div>
-   <div class="glass panel">
-    <small class="muted">CREDITS</small>
-    <h2 id="rpgCredits">0</h2>
-   </div>
-  </div>
- </div>
-
- <div class="glass panel">
-  <h2>🪐 Exploration Mission</h2>
-  <div class="canvasWrap">
-   <canvas id="rpgCanvas" width="900" height="500"></canvas>
-  </div>
-  <p class="muted">
-   惑星を訪問してXPとクレジットを獲得しよう。
-   発見した惑星は図鑑に登録されます。
-  </p>
-  <div class="gameControls">
-   <button class="primary" id="exploreBtn">🚀 EXPLORE PLANET</button>
-   <button id="healBtn">⚡ RESTORE ENERGY (20)</button>
-  </div>
-  <div class="status" id="rpgStatus">冒険の準備ができています。</div>
- </div>
-
- <div class="glass panel">
-  <h2>🎒 Inventory</h2>
-  <div id="inventory"></div>
- </div>
-</section>
-
-<!-- PLANETS -->
-
-<section class="page" id="page-planets">
- <div class="glass panel">
-  <h2>🪐 Procedural Planet Laboratory</h2>
-  <p class="muted">
-   シード値に応じて惑星の色、環境、地表パターン、衛星を生成。
-   同じ宇宙では同じ惑星が再現されます。
-  </p>
-  <div class="canvasWrap">
-   <canvas id="planetCanvas" width="900" height="500"></canvas>
-  </div>
-  <h3 id="planetName">Unknown Planet</h3>
-  <p class="muted" id="planetDetails"></p>
-  <div class="gameControls">
-   <button class="primary" id="nextPlanet">🌍 GENERATE PLANET</button>
-   <button id="discoverPlanet">📖 DISCOVER</button>
-  </div>
- </div>
- <div class="glass panel">
-  <h2>🌠 Discovered Planets</h2>
-  <div class="planetGrid" id="planetGrid"></div>
- </div>
-</section>
-
-<!-- ENCYCLOPEDIA -->
-
-<section class="page" id="page-collection">
- <div class="glass panel">
-  <h2>📚 Universal Encyclopedia</h2>
-  <p class="muted">これまでに発見した惑星と収集したアイテム。</p>
-  <h3>🪐 PLANETS</h3>
-  <div id="encyclopediaPlanets"></div>
-  <h3>💎 ITEMS</h3>
-  <div id="encyclopediaItems"></div>
- </div>
-</section>
-
-<!-- ACHIEVEMENTS -->
-
-<section class="page" id="page-achievements">
- <div class="glass panel">
-  <h2>🏆 Achievement System</h2>
-  <p class="muted">探索、戦闘、パズル、惑星発見などの実績。</p>
-  <div id="achievementList"></div>
- </div>
-</section>
-
-<!-- RANKING -->
-
-<section class="page" id="page-ranking">
- <div class="glass panel">
-  <h2>👑 Leaderboard</h2>
-  <p class="muted">
-   このバージョンは端末内ランキングです。
-   オンラインランキングにはサーバーAPIの設定が必要です。
-  </p>
-  <div class="row">
-   <input id="playerName" maxlength="20" placeholder="プレイヤー名">
-   <button class="primary" id="saveRanking">SAVE SCORE</button>
-  </div>
-  <div id="rankingList"></div>
- </div>
-</section>
-
-<!-- SAVES -->
-
-<section class="page" id="page-saves">
- <div class="glass panel">
-  <h2>💾 Save Manager</h2>
-  <p class="muted">各ゲームのセーブデータは独立して管理されます。</p>
-  <div id="saveList"></div>
-  <div class="gameControls">
-   <button id="exportSave">⬇ EXPORT JSON</button>
-   <button id="importSave">⬆ IMPORT JSON</button>
-   <input type="file" id="importFile" accept=".json,application/json" class="hidden">
-  </div>
- </div>
-</section>
-
-<div class="footer">
- OMNI-VERSE 2.0 · PROCEDURAL UNIVERSE ENGINE<br>
- Infinite worlds. Infinite possibilities.<br>
- © 2026 OMNI-VERSE
+    <!-- Start / Game Over Overlay -->
+    <div id="overlay" class="absolute inset-0 z-40 flex items-center justify-center bg-black/60 backdrop-blur-sm">
+      <div class="glass-deep noise rounded-3xl p-8 max-w-md w-[90%] text-center fade-in">
+        <div class="w-16 h-16 mx-auto mb-5 rounded-2xl flex items-center justify-center" style="background: linear-gradient(135deg, var(--accent), var(--accent2)); box-shadow: 0 0 40px color-mix(in srgb, var(--accent) 40%, transparent);">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+        </div>
+        <h1 id="overlayTitle" class="font-outfit font-semibold text-2xl tracking-tight mb-2">OMNI-VERSE</h1>
+        <p id="overlayDesc" class="text-sm opacity-70 mb-6 leading-relaxed">10,000,000 independent procedural universes.<br>Enter a World ID or jump into a random one.</p>
+        
+        <div class="flex gap-2 mb-5">
+          <input id="worldInput" type="number" min="0" max="9999999" placeholder="World ID (0–9999999)" 
+                 class="world-input flex-1 rounded-xl px-4 py-3 text-sm text-center">
+          <button id="btnGo" class="gold-btn rounded-xl px-5 py-3 text-sm">GO</button>
+        </div>
+        
+        <button id="btnStart" class="w-full gold-btn rounded-xl py-3.5 text-sm font-semibold mb-3">
+          Enter Universe
+        </button>
+        <button id="btnRandomOverlay" class="w-full glass rounded-xl py-3 text-sm font-medium hover:bg-white/10 transition">
+          Random Universe
+        </button>
+        
+        <div class="mt-6 pt-5 border-t border-white/10 text-[11px] opacity-40 font-mono">
+          Controls: ← → / A D · Space / ↑ to action · Mobile: touch
+        </div>
+      </div>
+    </div>
+  </main>
 </div>
-
-</div>
-</main>
 
 <script>
-"use strict";
+/* ============================================================
+   OMNI-VERSE — Single-file procedural universe engine
+   10,000,000 independent worlds
+   ============================================================ */
 
-/* =========================================
-   STORAGE & GAME DATA
-========================================= */
+const GENRES = [
+  { id: 0, name: "Quantum Highway", key: "highway" },
+  { id: 1, name: "Stellar Gravity", key: "orbital" },
+  { id: 2, name: "Zero-G Wave", key: "wave" },
+  { id: 3, name: "Core Guardian", key: "shooter" },
+  { id: 4, name: "Chrono Sync", key: "chrono" }
+];
 
-const STORAGE_KEY="OMNIVERSE_V2_SAVE";
+const SCALES = [
+  [0,2,4,5,7,9,11],          // Major
+  [0,2,3,5,7,8,10],          // Natural Minor
+  [0,2,3,5,7,9,10],          // Dorian
+  [0,1,4,5,7,8,11],          // Phrygian Dominant-ish
+  [0,2,4,6,7,9,11],          // Lydian
+  [0,2,4,5,7,9,10],          // Mixolydian
+  [0,1,3,5,6,8,10],          // Locrian-ish
+  [0,3,5,6,7,10]             // Blues-ish
+];
 
-const DEFAULT_DATA={
- version:2,
- seed:"OMNI-VERSE-001",
- worlds:0,
- player:{
-  level:1,xp:0,energy:100,credits:0,
-  inventory:{},
-  explored:0
- },
- discovered:[],
- achievements:[],
- scores:[],
- saves:{
-  puzzle:{score:0,moves:0,games:0},
-  action:{score:0,games:0},
-  rpg:{explored:0}
- }
-};
+// ---------- Seeded PRNG ----------
+function mulberry32(a) {
+  return function() {
+    let t = a += 0x6D2B79F5;
+    t = Math.imul(t ^ t >>> 15, t | 1);
+    t ^= t + Math.imul(t ^ t >>> 7, t | 61);
+    return ((t ^ t >>> 14) >>> 0) / 4294967296;
+  };
+}
 
-function loadData(){
- try{
-  const raw=localStorage.getItem(STORAGE_KEY);
-  if(!raw)return structuredClone(DEFAULT_DATA);
-  const d=JSON.parse(raw);
-  if(!d||typeof d!=="object"||!d.player||!d.saves)
-   throw new Error("Invalid save");
+function hashString(str) {
+  let h = 2166136261;
+  for (let i = 0; i < str.length; i++) {
+    h ^= str.charCodeAt(i);
+    h = Math.imul(h, 16777619);
+  }
+  return h >>> 0;
+}
+
+// ---------- Color helpers ----------
+function hsl(h, s, l, a = 1) {
+  return `hsla(${h % 360}, ${s}%, ${l}%, ${a})`;
+}
+
+function generatePalette(rng) {
+  const baseHue = Math.floor(rng() * 360);
+  const sat = 55 + rng() * 30;
   return {
-   ...structuredClone(DEFAULT_DATA),
-   ...d,
-   player:{...DEFAULT_DATA.player,...d.player},
-   saves:{...DEFAULT_DATA.saves,...d.saves}
+    primary: hsl(baseHue, sat, 58),
+    secondary: hsl(baseHue + 40 + rng()*30, sat - 10, 50),
+    accent: hsl(baseHue + 180 + rng()*40, 70, 60),
+    bg: hsl(baseHue, 25, 6),
+    glow: hsl(baseHue, 80, 65, 0.4),
+    particle: hsl(baseHue + 20, 70, 70),
+    trail: hsl(baseHue, 60, 55, 0.35)
   };
- }catch(e){
-  return structuredClone(DEFAULT_DATA);
- }
 }
 
-let data=loadData();
+// ---------- World generation ----------
+function createWorld(id) {
+  id = Math.max(0, Math.min(9999999, Math.floor(Number(id) || 0)));
+  const seed = hashString("OMNI-" + id);
+  const rng = mulberry32(seed);
+  
+  const genreIdx = Math.floor(rng() * 5);
+  const genre = GENRES[genreIdx];
+  const palette = generatePalette(rng);
+  const scale = SCALES[Math.floor(rng() * SCALES.length)];
+  const rootNote = 48 + Math.floor(rng() * 12); // C3–B3 range
+  
+  // Physics parameters
+  const gravity = 0.15 + rng() * 0.55;
+  const speed = 2.2 + rng() * 4.5;
+  const friction = 0.92 + rng() * 0.06;
+  const bounce = 0.3 + rng() * 0.5;
+  
+  // Art style variance
+  const artStyle = {
+    particleDensity: 0.4 + rng() * 0.9,
+    trailLength: 4 + Math.floor(rng() * 12),
+    shapeComplexity: Math.floor(rng() * 4),
+    glowIntensity: 0.3 + rng() * 0.7
+  };
 
-function save(){
- try{
-  localStorage.setItem(STORAGE_KEY,JSON.stringify(data));
- }catch(e){
-  setStatus("保存容量が不足しています。不要なデータを整理してください。");
- }
- updateUI();
+  return {
+    id,
+    seed,
+    genre,
+    palette,
+    scale,
+    rootNote,
+    gravity,
+    speed,
+    friction,
+    bounce,
+    artStyle,
+    name: `Universe ${String(id).padStart(7, '0')}`
+  };
 }
 
-function $(id){return document.getElementById(id)}
-
-function setStatus(message){
- const el=$("gameStatus");
- if(el)el.textContent=message;
-}
-
-function updateUI(){
- $("statWorlds").textContent=data.worlds.toLocaleString();
- $("statLevel").textContent=data.player.level;
- $("statPlanets").textContent=data.discovered.length;
- $("statAchievements").textContent=data.achievements.length;
- $("playerLevel").textContent="LEVEL "+data.player.level;
- $("playerXP").textContent=data.player.xp+" XP";
- $("rpgEnergy").textContent=data.player.energy;
- $("rpgCredits").textContent=data.player.credits;
- $("xpBar").style.width=
-  (data.player.xp/xpNeeded()*100)+"%";
- $("inventory").innerHTML=Object.entries(data.player.inventory)
-  .map(([k,v])=>`<div class="listItem"><span>${escapeHTML(k)}</span><b>${v}</b></div>`)
-  .join("")||'<p class="muted">アイテムはまだありません。</p>';
- renderAchievements();
- renderPlanets();
- renderEncyclopedia();
- renderRanking();
- renderSaves();
-}
-
-function escapeHTML(str){
- return String(str).replace(/[&<>"']/g,c=>({
-  "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
- }[c]));
-}
-
-/* =========================================
-   DETERMINISTIC RANDOM GENERATOR
-========================================= */
-
-function hash(str){
- let h=2166136261;
- for(let i=0;i<str.length;i++){
-  h^=str.charCodeAt(i);
-  h=Math.imul(h,16777619);
- }
- return h>>>0;
-}
-
-function mulberry(seed){
- return function(){
-  let t=seed+=0x6D2B79F5;
-  t=Math.imul(t^t>>>15,t|1);
-  t^=t+Math.imul(t^t>>>7,t|61);
-  return ((t^t>>>14)>>>0)/4294967296;
- };
-}
-
-let worldRandom=mulberry(hash(data.seed));
-
-function makeRng(seed){
- return mulberry(hash(String(seed)));
-}
-
-function randomInt(rng,min,max){
- return Math.floor(rng()*(max-min+1))+min;
-}
-
-function choose(rng,array){
- return array[Math.floor(rng()*array.length)];
-}
-
-function makeSeed(){
- if(crypto&&crypto.getRandomValues){
-  const a=new Uint32Array(2);
-  crypto.getRandomValues(a);
-  return "OMNI-"+a[0].toString(36)+"-"+a[1].toString(36);
- }
- return "OMNI-"+Date.now().toString(36);
-}
-
-/* =========================================
-   WORLD GENERATOR
-========================================= */
-
-let world={};
-
-function generateWorld(seed){
- data.seed=String(seed).slice(0,64);
- worldRandom=makeRng(data.seed);
-
- world={
-  seed:data.seed,
-  hue:randomInt(worldRandom,0,359),
-  difficulty:randomInt(worldRandom,1,5),
-  name:choose(worldRandom,[
-   "Aether","Nexus","Eclipse","Nebula",
-   "Quantum","Celestia","Astralis","Nova"
-  ])+"-"+randomInt(worldRandom,100,999),
-  stars:Array.from({length:150},()=>({
-   x:worldRandom(),y:worldRandom(),
-   r:worldRandom()*2+0.4,
-   a:worldRandom()*.8+.2
-  }))
- };
-
- data.worlds++;
- $("seedInput").value=data.seed;
- $("currentSeed").textContent="SEED: "+data.seed;
- $("worldName").textContent=world.name;
- $("worldDescription").textContent=
-  "DIFFICULTY "+world.difficulty+
-  " · GALACTIC HUE "+world.hue+
-  " · PROCEDURAL ENVIRONMENT";
-
- data.saves.rpg.seed=data.seed;
- save();
- drawRPG();
- generatePlanet();
-}
-
-$("generate").onclick=()=>{
- const s=$("seedInput").value.trim();
- if(s)changeWorld(s);
-};
-
-$("randomSeed").onclick=()=>changeWorld(makeSeed());
-
-function changeWorld(seed){
- stopAction();
- generateWorld(seed);
- generatePuzzle();
- $("rpgStatus").textContent="新しい宇宙が生成されました。";
-}
-
-$("seedInput").value=data.seed;
-
-/* =========================================
-   NAVIGATION
-========================================= */
-
-function navigate(page){
- document.querySelectorAll(".page").forEach(p=>{
-  p.classList.toggle("active",p.id==="page-"+page);
- });
- document.querySelectorAll(".navigation button").forEach(b=>{
-  b.classList.toggle("active",b.dataset.page===page);
- });
- if(page==="rpg")drawRPG();
- if(page==="planets")drawPlanet();
- if(page==="games")drawGame();
-}
-
-window.navigate=navigate;
-
-document.querySelectorAll(".navigation button").forEach(b=>{
- b.onclick=()=>navigate(b.dataset.page);
-});
-
-/* =========================================
-   EXPERIENCE & ACHIEVEMENTS
-========================================= */
-
-function xpNeeded(){
- return data.player.level*100;
-}
-
-function addXP(amount){
- data.player.xp+=amount;
- while(data.player.xp>=xpNeeded()){
-  data.player.xp-=xpNeeded();
-  data.player.level++;
-  data.player.energy=100;
-  $("rpgStatus").textContent="🎉 LEVEL UP! LEVEL "+data.player.level;
-  unlock("level"+data.player.level);
- }
- save();
-}
-
-const ACHIEVEMENTS=[
- {id:"first_world",name:"First Universe",desc:"初めて宇宙を生成",icon:"🌌"},
- {id:"first_planet",name:"First Contact",desc:"初めて惑星を発見",icon:"🪐"},
- {id:"five_planets",name:"Explorer",desc:"5つの惑星を発見",icon:"🚀"},
- {id:"ten_planets",name:"Galactic Pioneer",desc:"10の惑星を発見",icon:"🌠"},
- {id:"level2",name:"Rookie",desc:"レベル2に到達",icon:"⭐"},
- {id:"level5",name:"Veteran",desc:"レベル5に到達",icon:"👑"},
- {id:"puzzle_win",name:"Puzzle Master",desc:"パズルを完全攻略",icon:"🧩"},
- {id:"action_100",name:"Survivor",desc:"アクションで100点獲得",icon:"⚔️"},
- {id:"ten_explore",name:"Space Traveler",desc:"10回探索",icon:"🛸"}
-];
-
-function unlock(id){
- if(data.achievements.includes(id))return;
- if(!ACHIEVEMENTS.some(a=>a.id===id))return;
- data.achievements.push(id);
- $("rpgStatus").textContent="🏆 ACHIEVEMENT UNLOCKED!";
- save();
-}
-
-function checkAchievements(){
- if(data.worlds>=1)unlock("first_world");
- if(data.discovered.length>=1)unlock("first_planet");
- if(data.discovered.length>=5)unlock("five_planets");
- if(data.discovered.length>=10)unlock("ten_planets");
- if(data.player.level>=2)unlock("level2");
- if(data.player.level>=5)unlock("level5");
- if(data.player.explored>=10)unlock("ten_explore");
-}
-
-function renderAchievements(){
- $("achievementList").innerHTML=ACHIEVEMENTS.map(a=>{
-  const done=data.achievements.includes(a.id);
-  return `<div class="listItem">
-   <span>${a.icon} ${a.name}<br>
-   <small class="muted">${a.desc}</small></span>
-   <span class="badge">${done?"UNLOCKED":"LOCKED"}</span>
-  </div>`;
- }).join("");
-}
-
-/* =========================================
-   PLANET GENERATION & VISUALIZATION
-========================================= */
-
-let planet={};
-let planetRotation=0;
-
-const PLANET_TYPES=[
- "Oceanic","Desert","Ice","Volcanic",
- "Forest","Crystal","Gas Giant","Lava"
-];
-
-function generatePlanet(){
- const rng=makeRng(data.seed+"-PLANET-"+data.discovered.length+
-  "-"+(data.saves.rpg.planetIndex||0));
-
- const type=choose(rng,PLANET_TYPES);
- planet={
-  id:data.seed+"-"+(data.saves.rpg.planetIndex||0),
-  name:choose(rng,["Astra","Vega","Orion","Lyra","Zeta","Eos","Kronos"])
-    +"-"+randomInt(rng,100,999),
-  type,
-  hue:randomInt(rng,0,359),
-  size:randomInt(rng,50,100),
-  moons:randomInt(rng,0,4),
-  temperature:randomInt(rng,-180,450),
-  atmosphere:choose(rng,["Oxygen","Methane","Nitrogen","Carbon dioxide"]),
-  seed:data.seed
- };
- drawPlanet();
-}
-
-function drawSphere(c,x,y,r,hue,rotation,detail){
- const grad=c.createRadialGradient(
-  x-r*.35,y-r*.4,r*.03,x,y,r
- );
- grad.addColorStop(0,`hsl(${hue},80%,78%)`);
- grad.addColorStop(.4,`hsl(${hue},65%,48%)`);
- grad.addColorStop(1,`hsl(${hue},70%,12%)`);
-
- c.save();
- c.shadowColor=`hsl(${hue},90%,60%)`;
- c.shadowBlur=35;
- c.fillStyle=grad;
- c.beginPath();
- c.arc(x,y,r,0,Math.PI*2);
- c.fill();
- c.shadowBlur=0;
- c.clip();
-
- for(let i=0;i<detail;i++){
-  const yy=y-r+(i/detail)*r*2;
-  const wave=Math.sin(i*.7+rotation)*r*.15;
-  c.fillStyle=`hsla(${hue+25},70%,${30+(i%3)*12}%,.18)`;
-  c.beginPath();
-  c.ellipse(x+wave,yy,r*.95,r*.045,rotation*.1,0,Math.PI*2);
-  c.fill();
- }
-
- const shade=c.createLinearGradient(x-r,y,x+r,y);
- shade.addColorStop(0,"#0008");
- shade.addColorStop(.45,"#0000");
- shade.addColorStop(1,"#0009");
- c.fillStyle=shade;
- c.fillRect(x-r,y-r,r*2,r*2);
- c.restore();
-}
-
-function drawPlanet(){
- const c=$("planetCanvas").getContext("2d");
- const w=900,h=500;
- c.clearRect(0,0,w,h);
- const bg=c.createLinearGradient(0,0,w,h);
- bg.addColorStop(0,"#101d3d");
- bg.addColorStop(1,"#070b1b");
- c.fillStyle=bg;c.fillRect(0,0,w,h);
-
- const rng=makeRng(planet.id);
- for(let i=0;i<120;i++){
-  c.fillStyle=`rgba(255,255,255,${rng()*.8})`;
-  c.beginPath();
-  c.arc(rng()*w,rng()*h,rng()*2,0,Math.PI*2);
-  c.fill();
- }
-
- const x=450,y=250,r=145;
-
- if(planet.type==="Gas Giant"){
-  c.save();
-  c.strokeStyle="#d7c3ff88";
-  c.lineWidth=15;
-  c.beginPath();
-  c.ellipse(x,y,r*1.7,r*.45,-.25,0,Math.PI*2);
-  c.stroke();
-  c.restore();
- }
-
- drawSphere(c,x,y,r,planet.hue,planetRotation,35);
-
- for(let i=0;i<planet.moons;i++){
-  const angle=planetRotation+i*Math.PI*2/Math.max(1,planet.moons);
-  const mx=x+Math.cos(angle)*225;
-  const my=y+Math.sin(angle)*75;
-  c.fillStyle="#cbd5e8";
-  c.beginPath();
-  c.arc(mx,my,10,0,Math.PI*2);
-  c.fill();
- }
-
- planetRotation+=.006;
-
- $("planetName").textContent=planet.name;
- $("planetDetails").textContent=
-  planet.type+" · "+planet.temperature+"°C · "+
-  planet.atmosphere+" · "+planet.moons+" MOONS · SEED "+planet.seed;
-}
-
-$("nextPlanet").onclick=()=>{
- data.saves.rpg.planetIndex=(data.saves.rpg.planetIndex||0)+1;
- generatePlanet();
- save();
-};
-
-$("discoverPlanet").onclick=()=>{
- if(data.discovered.some(p=>p.id===planet.id)){
-  $("planetDetails").textContent="この惑星はすでに発見済みです。";
-  return;
- }
-
- data.discovered.push({...planet});
- data.player.credits+=25;
- addXP(30);
- checkAchievements();
- save();
- $("planetDetails").textContent="✨ 惑星を発見！ +30 XP / +25 CREDITS";
-};
-
-function renderPlanets(){
- $("planetGrid").innerHTML=data.discovered.map(p=>`
- <div class="glass planetCard">
-  <div class="planetOrb" style="background:radial-gradient(circle at 30% 30%,hsl(${p.hue},80%,80%),hsl(${p.hue},65%,30%) 55%,#050815)"></div>
-  <strong>${escapeHTML(p.name)}</strong>
-  <small>${escapeHTML(p.type)}</small>
- </div>`).join("")||'<p class="muted">まだ惑星を発見していません。</p>';
-}
-
-function renderEncyclopedia(){
- $("encyclopediaPlanets").innerHTML=data.discovered.map(p=>
-  `<div class="listItem"><span>🪐 ${escapeHTML(p.name)}</span><span>${escapeHTML(p.type)}</span></div>`
- ).join("")||'<p class="muted">未発見</p>';
-
- $("encyclopediaItems").innerHTML=Object.entries(data.player.inventory)
- .map(([k,v])=>`<div class="listItem"><span>💎 ${escapeHTML(k)}</span><b>${v}</b></div>`)
- .join("")||'<p class="muted">未収集</p>';
-}
-
-/* =========================================
-   SPACE RPG
-========================================= */
-
-const rpgCanvas=$("rpgCanvas");
-const rc=rpgCanvas.getContext("2d");
-
-function drawRPG(){
- const w=900,h=500;
- const rng=makeRng(data.seed+"-RPG");
- rc.fillStyle="#080d20";rc.fillRect(0,0,w,h);
-
- for(let i=0;i<150;i++){
-  rc.fillStyle="rgba(255,255,255,.6)";
-  rc.beginPath();
-  rc.arc(rng()*w,rng()*h,rng()*2,0,Math.PI*2);
-  rc.fill();
- }
-
- const hue=world.hue||200;
- drawSphere(rc,450,245,120,hue,planetRotation,25);
-
- rc.fillStyle="#fff";
- rc.font="bold 20px sans-serif";
- rc.textAlign="center";
- rc.fillText("COSMIC EXPLORATION",450,45);
- rc.font="14px sans-serif";
- rc.fillStyle="#aebce0";
- rc.fillText("LEVEL "+data.player.level+" · "+data.player.explored+" MISSIONS",450,420);
-}
-
-$("exploreBtn").onclick=()=>{
- if(data.player.energy<15){
-  $("rpgStatus").textContent="エネルギー不足です。回復してください。";
-  return;
- }
-
- data.player.energy-=15;
- data.player.explored++;
- data.player.credits+=10;
-
- const rng=makeRng(data.seed+"-MISSION-"+data.player.explored);
- const item=choose(rng,[
-  "Quantum Crystal","Stellar Ore","Ancient Relic",
-  "Nebula Fragment","Cosmic Core"
- ]);
-
- data.player.inventory[item]=(data.player.inventory[item]||0)+1;
-
- addXP(25);
- checkAchievements();
- save();
-
- $("rpgStatus").textContent=
-  "🚀 探索成功！ +25 XP / +10 CREDITS / "+item+" ×1";
-
- data.saves.rpg.explored=data.player.explored;
- drawRPG();
-};
-
-$("healBtn").onclick=()=>{
- if(data.player.credits<20){
-  $("rpgStatus").textContent="クレジットが不足しています。";
-  return;
- }
- data.player.credits-=20;
- data.player.energy=Math.min(100,data.player.energy+40);
- save();
- $("rpgStatus").textContent="⚡ ENERGY RESTORED";
-};
-
-/* =========================================
-   PUZZLE GAME
-========================================= */
-
-const gameCanvas=$("gameCanvas");
-const gc=gameCanvas.getContext("2d");
-const GW=900,GH=600;
-let gameMode="puzzle";
-let tiles=[];
-let selected=null;
-let puzzleDone=false;
-let puzzleScore=0;
-let puzzleMoves=0;
-
-const tileColors=[
- "#8b7dff","#53dce9","#f17dc9",
- "#ffca75","#70e4a2","#ff817f"
-];
-
-function generatePuzzle(){
- const rng=makeRng(data.seed+"-PUZZLE");
- tiles=[];
- selected=null;
- puzzleDone=false;
- puzzleScore=0;
- puzzleMoves=0;
-
- for(let color=0;color<6;color++){
-  for(let pair=0;pair<5;pair++){
-   tiles.push({color,active:true});
-   tiles.push({color,active:true});
+// ---------- Audio Engine ----------
+class AudioEngine {
+  constructor() {
+    this.ctx = null;
+    this.master = null;
+    this.muted = false;
+    this.playing = false;
+    this.interval = null;
+    this.world = null;
   }
- }
-
- for(let i=tiles.length-1;i>0;i--){
-  const j=Math.floor(rng()*(i+1));
-  [tiles[i],tiles[j]]=[tiles[j],tiles[i]];
- }
-
- drawGame();
+  
+  init() {
+    if (this.ctx) return;
+    this.ctx = new (window.AudioContext || window.webkitAudioContext)();
+    this.master = this.ctx.createGain();
+    this.master.gain.value = 0.18;
+    this.master.connect(this.ctx.destination);
+  }
+  
+  setWorld(world) {
+    this.world = world;
+  }
+  
+  playNote(freq, dur = 0.25, type = 'sine', gain = 0.3) {
+    if (!this.ctx || this.muted) return;
+    const osc = this.ctx.createOscillator();
+    const g = this.ctx.createGain();
+    const filter = this.ctx.createBiquadFilter();
+    filter.type = 'lowpass';
+    filter.frequency.value = 1800 + Math.random() * 800;
+    
+    osc.type = type;
+    osc.frequency.value = freq;
+    g.gain.setValueAtTime(0, this.ctx.currentTime);
+    g.gain.linearRampToValueAtTime(gain, this.ctx.currentTime + 0.02);
+    g.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + dur);
+    
+    osc.connect(filter);
+    filter.connect(g);
+    g.connect(this.master);
+    osc.start();
+    osc.stop(this.ctx.currentTime + dur + 0.05);
+  }
+  
+  startBGM() {
+    this.stopBGM();
+    if (!this.world || this.muted) return;
+    this.playing = true;
+    this.init();
+    
+    const { scale, rootNote } = this.world;
+    let step = 0;
+    const tempo = 140 + (this.world.seed % 80);
+    const intervalMs = (60 / tempo) * 1000 * 0.5;
+    
+    this.interval = setInterval(() => {
+      if (!this.playing || this.muted) return;
+      const deg = scale[step % scale.length];
+      const octave = Math.floor(step / scale.length) % 2;
+      const freq = 440 * Math.pow(2, (rootNote + deg + octave * 12 - 69) / 12);
+      const type = ['sine', 'triangle', 'sine', 'square'][step % 4];
+      this.playNote(freq, 0.28, type, 0.22);
+      
+      // occasional bass
+      if (step % 4 === 0) {
+        const bassFreq = 440 * Math.pow(2, (rootNote + scale[0] - 24 - 69) / 12);
+        this.playNote(bassFreq, 0.4, 'triangle', 0.15);
+      }
+      step++;
+    }, intervalMs);
+  }
+  
+  stopBGM() {
+    this.playing = false;
+    if (this.interval) {
+      clearInterval(this.interval);
+      this.interval = null;
+    }
+  }
+  
+  toggleMute() {
+    this.muted = !this.muted;
+    if (this.muted) this.stopBGM();
+    else if (this.world) this.startBGM();
+    return this.muted;
+  }
+  
+  sfx(type) {
+    if (!this.ctx || this.muted) return;
+    this.init();
+    if (type === 'jump') this.playNote(520 + Math.random()*80, 0.12, 'square', 0.15);
+    if (type === 'hit') this.playNote(180, 0.2, 'sawtooth', 0.2);
+    if (type === 'score') this.playNote(880, 0.15, 'sine', 0.18);
+    if (type === 'die') {
+      this.playNote(220, 0.4, 'sawtooth', 0.25);
+      setTimeout(() => this.playNote(110, 0.5, 'triangle', 0.2), 100);
+    }
+  }
 }
 
-function drawGame(){
- gc.fillStyle="#090e20";gc.fillRect(0,0,GW,GH);
+// ---------- Game Engine ----------
+class OmniGame {
+  constructor(canvas) {
+    this.canvas = canvas;
+    this.ctx = canvas.getContext('2d');
+    this.world = null;
+    this.audio = new AudioEngine();
+    this.state = 'idle'; // idle | playing | dead
+    this.score = 0;
+    this.keys = {};
+    this.touch = { left: false, right: false, action: false };
+    this.entities = [];
+    this.particles = [];
+    this.player = null;
+    this.time = 0;
+    this.lastTime = 0;
+    this.dpr = Math.min(window.devicePixelRatio || 1, 2);
+    
+    this.resize();
+    window.addEventListener('resize', () => this.resize());
+    this.bindInput();
+  }
+  
+  resize() {
+    const rect = this.canvas.parentElement.getBoundingClientRect();
+    this.w = rect.width;
+    this.h = rect.height;
+    this.canvas.width = this.w * this.dpr;
+    this.canvas.height = this.h * this.dpr;
+    this.canvas.style.width = this.w + 'px';
+    this.canvas.style.height = this.h + 'px';
+    this.ctx.setTransform(this.dpr, 0, 0, this.dpr, 0, 0);
+  }
+  
+  bindInput() {
+    window.addEventListener('keydown', e => {
+      this.keys[e.code] = true;
+      if (['Space', 'ArrowUp', 'ArrowLeft', 'ArrowRight', 'KeyA', 'KeyD'].includes(e.code)) e.preventDefault();
+    });
+    window.addEventListener('keyup', e => { this.keys[e.code] = false; });
+    
+    this.canvas.addEventListener('touchstart', e => {
+      e.preventDefault();
+      const t = e.touches[0];
+      const x = t.clientX / this.w;
+      if (x < 0.3) this.touch.left = true;
+      else if (x > 0.7) this.touch.right = true;
+      else this.touch.action = true;
+    }, { passive: false });
+    
+    this.canvas.addEventListener('touchend', () => {
+      this.touch = { left: false, right: false, action: false };
+    });
+  }
+  
+  loadWorld(id) {
+    this.world = createWorld(id);
+    this.audio.setWorld(this.world);
+    this.applyTheme();
+    this.resetGame();
+    this.updateHUD();
+  }
+  
+  applyTheme() {
+    const p = this.world.palette;
+    document.documentElement.style.setProperty('--accent', p.primary);
+    document.documentElement.style.setProperty('--accent2', p.accent);
+    document.documentElement.style.setProperty('--bg', p.bg);
+  }
+  
+  resetGame() {
+    this.state = 'idle';
+    this.score = 0;
+    this.time = 0;
+    this.entities = [];
+    this.particles = [];
+    this.player = this.createPlayer();
+    this.spawnInitial();
+  }
+  
+  createPlayer() {
+    const g = this.world.genre.key;
+    if (g === 'highway') {
+      return { x: this.w * 0.2, y: this.h * 0.5, vx: 0, vy: 0, r: 14, onGround: false, angle: 0 };
+    }
+    if (g === 'orbital') {
+      return { x: this.w * 0.5, y: this.h * 0.5, vx: 0, vy: 0, r: 12, angle: 0, orbitR: 80 };
+    }
+    if (g === 'wave') {
+      return { x: this.w * 0.25, y: this.h * 0.5, vx: 0, vy: 0, r: 13, wavePhase: 0 };
+    }
+    if (g === 'shooter') {
+      return { x: this.w * 0.5, y: this.h * 0.5, vx: 0, vy: 0, r: 16, angle: 0, cooldown: 0 };
+    }
+    // chrono
+    return { x: this.w * 0.5, y: this.h * 0.7, vx: 0, vy: 0, r: 14, combo: 0, nextBeat: 1 };
+  }
+  
+  spawnInitial() {
+    const g = this.world.genre.key;
+    if (g === 'highway') {
+      for (let i = 0; i < 8; i++) this.spawnObstacle(this.w + i * 180);
+    }
+    if (g === 'orbital') {
+      for (let i = 0; i < 6; i++) {
+        const a = (i / 6) * Math.PI * 2;
+        this.entities.push({
+          type: 'planet',
+          x: this.w/2 + Math.cos(a)*160,
+          y: this.h/2 + Math.sin(a)*160,
+          r: 18 + Math.random()*14,
+          angle: a,
+          dist: 140 + Math.random()*80
+        });
+      }
+    }
+    if (g === 'wave') {
+      for (let i = 0; i < 12; i++) {
+        this.entities.push({ type: 'ring', x: this.w + i * 140, y: this.h*0.5, r: 30 + Math.random()*40, passed: false });
+      }
+    }
+    if (g === 'shooter') {
+      for (let i = 0; i < 5; i++) this.spawnEnemy();
+    }
+    if (g === 'chrono') {
+      for (let i = 0; i < 4; i++) {
+        this.entities.push({
+          type: 'beat',
+          x: 80 + i * (this.w - 160)/3,
+          y: this.h * 0.4,
+          r: 22,
+          active: false,
+          timer: 0
+        });
+      }
+    }
+  }
+  
+  spawnObstacle(x) {
+    const h = 40 + Math.random() * 120;
+    const top = Math.random() > 0.5;
+    this.entities.push({
+      type: 'obstacle',
+      x, y: top ? 0 : this.h - h,
+      w: 28 + Math.random()*20,
+      h,
+      scored: false
+    });
+  }
+  
+  spawnEnemy() {
+    const side = Math.floor(Math.random()*4);
+    let x, y;
+    if (side === 0) { x = -20; y = Math.random()*this.h; }
+    else if (side === 1) { x = this.w + 20; y = Math.random()*this.h; }
+    else if (side === 2) { x = Math.random()*this.w; y = -20; }
+    else { x = Math.random()*this.w; y = this.h + 20; }
+    this.entities.push({
+      type: 'enemy',
+      x, y,
+      vx: (this.w/2 - x) * 0.002 * this.world.speed,
+      vy: (this.h/2 - y) * 0.002 * this.world.speed,
+      r: 10 + Math.random()*10,
+      hp: 1
+    });
+  }
+  
+  start() {
+    if (this.state === 'playing') return;
+    this.resetGame();
+    this.state = 'playing';
+    this.audio.init();
+    this.audio.startBGM();
+    this.lastTime = performance.now();
+    requestAnimationFrame(t => this.loop(t));
+  }
+  
+  loop(now) {
+    if (this.state !== 'playing') return;
+    const dt = Math.min((now - this.lastTime) / 16.666, 2.5);
+    this.lastTime = now;
+    this.time += dt;
+    
+    this.update(dt);
+    this.draw();
+    
+    requestAnimationFrame(t => this.loop(t));
+  }
+  
+  update(dt) {
+    const g = this.world.genre.key;
+    const p = this.player;
+    
+    // Input
+    const left = this.keys['ArrowLeft'] || this.keys['KeyA'] || this.touch.left;
+    const right = this.keys['ArrowRight'] || this.keys['KeyD'] || this.touch.right;
+    const action = this.keys['Space'] || this.keys['ArrowUp'] || this.touch.action;
+    
+    if (g === 'highway') {
+      // Gravity runner side-view
+      p.vy += this.world.gravity * dt * 1.8;
+      if (left) p.vx -= 0.4 * dt;
+      if (right) p.vx += 0.4 * dt;
+      p.vx *= this.world.friction;
+      p.x += p.vx * this.world.speed * 0.3;
+      p.y += p.vy;
+      
+      // floor / ceiling
+      if (p.y > this.h - p.r) { p.y = this.h - p.r; p.vy = 0; p.onGround = true; }
+      else if (p.y < p.r) { p.y = p.r; p.vy = 0; }
+      else p.onGround = false;
+      
+      if (action && p.onGround) {
+        p.vy = -9.5 * (0.7 + this.world.bounce);
+        this.audio.sfx('jump');
+        this.spawnParticles(p.x, p.y, 6);
+      }
+      
+      // obstacles scroll
+      for (const e of this.entities) {
+        if (e.type === 'obstacle') {
+          e.x -= this.world.speed * 1.4 * dt;
+          if (!e.scored && e.x + e.w < p.x) {
+            e.scored = true;
+            this.score += 10;
+            this.audio.sfx('score');
+          }
+          // collision
+          if (p.x + p.r > e.x && p.x - p.r < e.x + e.w &&
+              p.y + p.r > e.y && p.y - p.r < e.y + e.h) {
+            this.die();
+          }
+        }
+      }
+      this.entities = this.entities.filter(e => e.x > -50);
+      if (this.entities.filter(e => e.type === 'obstacle').length < 6) {
+        const last = this.entities[this.entities.length-1];
+        this.spawnObstacle((last ? last.x : this.w) + 160 + Math.random()*80);
+      }
+      // keep player in bounds horizontally a bit
+      p.x = Math.max(p.r + 20, Math.min(this.w * 0.55, p.x));
+    }
+    
+    else if (g === 'orbital') {
+      // Centrifugal / orbital
+      const cx = this.w / 2, cy = this.h / 2;
+      if (left) p.angle -= 0.045 * dt * this.world.speed;
+      if (right) p.angle += 0.045 * dt * this.world.speed;
+      if (action) p.orbitR = Math.max(40, p.orbitR - 1.8 * dt);
+      else p.orbitR = Math.min(200, p.orbitR + 0.6 * dt);
+      
+      p.x = cx + Math.cos(p.angle) * p.orbitR;
+      p.y = cy + Math.sin(p.angle) * p.orbitR;
+      
+      for (const e of this.entities) {
+        if (e.type === 'planet') {
+          e.angle += 0.008 * dt;
+          e.x = cx + Math.cos(e.angle) * e.dist;
+          e.y = cy + Math.sin(e.angle) * e.dist;
+          const dx = p.x - e.x, dy = p.y - e.y;
+          if (Math.hypot(dx, dy) < p.r + e.r) this.die();
+        }
+      }
+      if (Math.floor(this.time) % 90 === 0) this.score += 5;
+    }
+    
+    else if (g === 'wave') {
+      p.wavePhase += 0.04 * dt * this.world.speed;
+      const baseY = this.h * 0.5 + Math.sin(p.wavePhase) * (60 + this.world.gravity * 40);
+      if (left) p.x -= 2.5 * dt;
+      if (right) p.x += 2.5 * dt;
+      if (action) p.y += (baseY - 80 - p.y) * 0.08 * dt;
+      else p.y += (baseY - p.y) * 0.06 * dt;
+      
+      p.x = Math.max(p.r, Math.min(this.w * 0.6, p.x));
+      
+      for (const e of this.entities) {
+        if (e.type === 'ring') {
+          e.x -= this.world.speed * 1.2 * dt;
+          if (!e.passed && e.x < p.x) {
+            e.passed = true;
+            const dy = Math.abs(p.y - e.y);
+            if (dy < e.r - 8) {
+              this.score += 25;
+              this.audio.sfx('score');
+              this.spawnParticles(e.x, e.y, 8);
+            } else if (dy < e.r + p.r) {
+              this.die();
+            }
+          }
+        }
+      }
+      this.entities = this.entities.filter(e => e.x > -60);
+      if (this.entities.length < 8) {
+        const lastX = this.entities.length ? Math.max(...this.entities.map(e => e.x)) : this.w;
+        this.entities.push({
+          type: 'ring',
+          x: lastX + 130 + Math.random()*40,
+          y: this.h * 0.35 + Math.random() * this.h * 0.3,
+          r: 28 + Math.random()*35,
+          passed: false
+        });
+      }
+    }
+    
+    else if (g === 'shooter') {
+      if (left) p.x -= 3.2 * dt * this.world.speed * 0.4;
+      if (right) p.x += 3.2 * dt * this.world.speed * 0.4;
+      if (this.keys['ArrowUp'] || this.keys['KeyW']) p.y -= 3.2 * dt;
+      if (this.keys['ArrowDown'] || this.keys['KeyS']) p.y += 3.2 * dt;
+      p.x = Math.max(p.r, Math.min(this.w - p.r, p.x));
+      p.y = Math.max(p.r, Math.min(this.h - p.r, p.y));
+      
+      p.cooldown = Math.max(0, p.cooldown - dt);
+      if (action && p.cooldown <= 0) {
+        p.cooldown = 8;
+        // shoot toward mouse-ish center or random direction near forward
+        const ang = Math.atan2(this.h/2 - p.y, this.w/2 - p.x) + (Math.random()-0.5)*0.3;
+        this.entities.push({
+          type: 'bullet',
+          x: p.x, y: p.y,
+          vx: Math.cos(ang) * 9,
+          vy: Math.sin(ang) * 9,
+          r: 4,
+          life: 90
+        });
+        this.audio.sfx('jump');
+      }
+      
+      for (const e of this.entities) {
+        if (e.type === 'enemy') {
+          e.x += e.vx * dt * 1.5;
+          e.y += e.vy * dt * 1.5;
+          // attract slightly
+          e.vx += (p.x - e.x) * 0.00015 * dt;
+          e.vy += (p.y - e.y) * 0.00015 * dt;
+          if (Math.hypot(e.x - p.x, e.y - p.y) < e.r + p.r) this.die();
+        }
+        if (e.type === 'bullet') {
+          e.x += e.vx * dt;
+          e.y += e.vy * dt;
+          e.life -= dt;
+        }
+      }
+      
+      // bullet-enemy collision
+      for (const b of this.entities.filter(e => e.type === 'bullet')) {
+        for (const en of this.entities.filter(e => e.type === 'enemy')) {
+          if (Math.hypot(b.x - en.x, b.y - en.y) < b.r + en.r) {
+            en.hp = 0;
+            b.life = 0;
+            this.score += 50;
+            this.audio.sfx('score');
+            this.spawnParticles(en.x, en.y, 10);
+          }
+        }
+      }
+      
+      this.entities = this.entities.filter(e => {
+        if (e.type === 'bullet') return e.life > 0;
+        if (e.type === 'enemy') return e.hp > 0 && e.x > -40 && e.x < this.w+40 && e.y > -40 && e.y < this.h+40;
+        return true;
+      });
+      
+      if (this.entities.filter(e => e.type === 'enemy').length < 4 + Math.floor(this.score/200)) {
+        this.spawnEnemy();
+      }
+    }
+    
+    else if (g === 'chrono') {
+      // Timing combo
+      if (left) p.x -= 2.8 * dt;
+      if (right) p.x += 2.8 * dt;
+      p.x = Math.max(40, Math.min(this.w - 40, p.x));
+      
+      for (const e of this.entities) {
+        if (e.type === 'beat') {
+          e.timer += dt * 0.04 * this.world.speed;
+          const pulse = Math.sin(e.timer);
+          e.active = pulse > 0.85;
+          e.scale = 1 + Math.max(0, pulse) * 0.35;
+          
+          if (e.active && Math.abs(p.x - e.x) < 50 && action) {
+            this.score += 30 + p.combo * 10;
+            p.combo = Math.min(12, p.combo + 1);
+            this.audio.sfx('score');
+            this.spawnParticles(e.x, e.y, 12);
+            e.timer = 0; // reset
+          }
+        }
+      }
+      if (action) {
+        // miss penalty soft
+        let hit = false;
+        for (const e of this.entities) {
+          if (e.active && Math.abs(p.x - e.x) < 55) hit = true;
+        }
+        if (!hit) p.combo = Math.max(0, p.combo - 2);
+      }
+    }
+    
+    // Particles
+    for (const pt of this.particles) {
+      pt.x += pt.vx * dt;
+      pt.y += pt.vy * dt;
+      pt.life -= dt;
+      pt.vy += 0.05 * dt;
+    }
+    this.particles = this.particles.filter(pt => pt.life > 0);
+    
+    this.updateHUD();
+  }
+  
+  spawnParticles(x, y, n) {
+    const col = this.world.palette.particle;
+    for (let i = 0; i < n; i++) {
+      const a = Math.random() * Math.PI * 2;
+      const sp = 1 + Math.random() * 3;
+      this.particles.push({
+        x, y,
+        vx: Math.cos(a) * sp,
+        vy: Math.sin(a) * sp,
+        life: 20 + Math.random() * 25,
+        r: 1.5 + Math.random() * 2.5,
+        color: col
+      });
+    }
+  }
+  
+  die() {
+    this.state = 'dead';
+    this.audio.sfx('die');
+    this.audio.stopBGM();
+    this.spawnParticles(this.player.x, this.player.y, 25);
+    
+    setTimeout(() => {
+      document.getElementById('overlayTitle').textContent = 'Universe Collapsed';
+      document.getElementById('overlayDesc').innerHTML = `Score: <strong>${this.score}</strong><br>World ${String(this.world.id).padStart(7,'0')} · ${this.world.genre.name}`;
+      document.getElementById('btnStart').textContent = 'Re-enter Universe';
+      document.getElementById('overlay').style.display = 'flex';
+    }, 600);
+  }
+  
+  draw() {
+    const ctx = this.ctx;
+    const w = this.w, h = this.h;
+    const pal = this.world.palette;
+    const g = this.world.genre.key;
+    
+    // Background
+    ctx.fillStyle = pal.bg;
+    ctx.fillRect(0, 0, w, h);
+    
+    // subtle grid / stars
+    ctx.save();
+    ctx.globalAlpha = 0.15;
+    ctx.strokeStyle = pal.primary;
+    ctx.lineWidth = 1;
+    const grid = 48;
+    const ox = (this.time * 0.3) % grid;
+    for (let x = -grid; x < w + grid; x += grid) {
+      ctx.beginPath();
+      ctx.moveTo(x + ox, 0);
+      ctx.lineTo(x + ox, h);
+      ctx.stroke();
+    }
+    for (let y = 0; y < h; y += grid) {
+      ctx.beginPath();
+      ctx.moveTo(0, y);
+      ctx.lineTo(w, y);
+      ctx.stroke();
+    }
+    ctx.restore();
+    
+    // ambient glow orbs
+    for (let i = 0; i < 3; i++) {
+      const gx = w * (0.2 + i * 0.3) + Math.sin(this.time * 0.01 + i) * 40;
+      const gy = h * (0.3 + (i%2)*0.3) + Math.cos(this.time * 0.008 + i) * 30;
+      const grad = ctx.createRadialGradient(gx, gy, 0, gx, gy, 120);
+      grad.addColorStop(0, pal.glow);
+      grad.addColorStop(1, 'transparent');
+      ctx.fillStyle = grad;
+      ctx.fillRect(gx - 120, gy - 120, 240, 240);
+    }
+    
+    // Entities
+    for (const e of this.entities) {
+      if (e.type === 'obstacle') {
+        ctx.fillStyle = pal.secondary;
+        ctx.shadowColor = pal.primary;
+        ctx.shadowBlur = 12 * this.world.artStyle.glowIntensity;
+        ctx.fillRect(e.x, e.y, e.w, e.h);
+        ctx.shadowBlur = 0;
+        // inner highlight
+        ctx.fillStyle = 'rgba(255,255,255,0.12)';
+        ctx.fillRect(e.x, e.y, 3, e.h);
+      }
+      else if (e.type === 'planet') {
+        const grd = ctx.createRadialGradient(e.x - e.r*0.3, e.y - e.r*0.3, 0, e.x, e.y, e.r);
+        grd.addColorStop(0, pal.accent);
+        grd.addColorStop(1, pal.secondary);
+        ctx.beginPath();
+        ctx.arc(e.x, e.y, e.r, 0, Math.PI * 2);
+        ctx.fillStyle = grd;
+        ctx.shadowColor = pal.accent;
+        ctx.shadowBlur = 20;
+        ctx.fill();
+        ctx.shadowBlur = 0;
+      }
+      else if (e.type === 'ring') {
+        ctx.beginPath();
+        ctx.arc(e.x, e.y, e.r, 0, Math.PI * 2);
+        ctx.strokeStyle = pal.primary;
+        ctx.lineWidth = 4;
+        ctx.shadowColor = pal.primary;
+        ctx.shadowBlur = 15;
+        ctx.stroke();
+        ctx.shadowBlur = 0;
+        ctx.beginPath();
+        ctx.arc(e.x, e.y, e.r - 8, 0, Math.PI * 2);
+        ctx.strokeStyle = pal.accent + '88';
+        ctx.lineWidth = 2;
+        ctx.stroke();
+      }
+      else if (e.type === 'enemy') {
+        ctx.beginPath();
+        ctx.arc(e.x, e.y, e.r, 0, Math.PI * 2);
+        ctx.fillStyle = pal.secondary;
+        ctx.shadowColor = '#ff4466';
+        ctx.shadowBlur = 12;
+        ctx.fill();
+        ctx.shadowBlur = 0;
+      }
+      else if (e.type === 'bullet') {
+        ctx.beginPath();
+        ctx.arc(e.x, e.y, e.r, 0, Math.PI * 2);
+        ctx.fillStyle = pal.accent;
+        ctx.shadowColor = pal.accent;
+        ctx.shadowBlur = 8;
+        ctx.fill();
+        ctx.shadowBlur = 0;
+      }
+      else if (e.type === 'beat') {
+        const s = e.scale || 1;
+        ctx.beginPath();
+        ctx.arc(e.x, e.y, e.r * s, 0, Math.PI * 2);
+        ctx.fillStyle = e.active ? pal.accent : pal.secondary + '66';
+        ctx.shadowColor = e.active ? pal.accent : 'transparent';
+        ctx.shadowBlur = e.active ? 25 : 0;
+        ctx.fill();
+        ctx.shadowBlur = 0;
+        if (e.active) {
+          ctx.beginPath();
+          ctx.arc(e.x, e.y, e.r * s + 8, 0, Math.PI * 2);
+          ctx.strokeStyle = pal.accent;
+          ctx.lineWidth = 2;
+          ctx.stroke();
+        }
+      }
+    }
+    
+    // Particles
+    for (const pt of this.particles) {
+      ctx.globalAlpha = Math.min(1, pt.life / 20);
+      ctx.beginPath();
+      ctx.arc(pt.x, pt.y, pt.r, 0, Math.PI * 2);
+      ctx.fillStyle = pt.color;
+      ctx.fill();
+    }
+    ctx.globalAlpha = 1;
+    
+    // Player
+    if (this.player && this.state !== 'dead') {
+      const p = this.player;
+      ctx.save();
+      ctx.translate(p.x, p.y);
+      
+      // trail
+      if (g === 'highway' || g === 'wave') {
+        ctx.globalAlpha = 0.3;
+        for (let i = 1; i <= this.world.artStyle.trailLength; i++) {
+          ctx.beginPath();
+          ctx.arc(-i * 4, 0, p.r * (1 - i * 0.06), 0, Math.PI * 2);
+          ctx.fillStyle = pal.trail;
+          ctx.fill();
+        }
+        ctx.globalAlpha = 1;
+      }
+      
+      // body
+      const grd = ctx.createRadialGradient(-p.r*0.3, -p.r*0.3, 0, 0, 0, p.r);
+      grd.addColorStop(0, '#ffffff');
+      grd.addColorStop(0.4, pal.primary);
+      grd.addColorStop(1, pal.secondary);
+      ctx.beginPath();
+      ctx.arc(0, 0, p.r, 0, Math.PI * 2);
+      ctx.fillStyle = grd;
+      ctx.shadowColor = pal.primary;
+      ctx.shadowBlur = 18 * this.world.artStyle.glowIntensity;
+      ctx.fill();
+      ctx.shadowBlur = 0;
+      
+      // core
+      ctx.beginPath();
+      ctx.arc(0, 0, p.r * 0.35, 0, Math.PI * 2);
+      ctx.fillStyle = '#fff';
+      ctx.fill();
+      
+      ctx.restore();
+    }
+    
+    // vignette
+    const vig = ctx.createRadialGradient(w/2, h/2, h*0.3, w/2, h/2, h*0.9);
+    vig.addColorStop(0, 'transparent');
+    vig.addColorStop(1, 'rgba(0,0,0,0.55)');
+    ctx.fillStyle = vig;
+    ctx.fillRect(0, 0, w, h);
+  }
+  
+  updateHUD() {
+    if (!this.world) return;
+    document.getElementById('hudWorldId').textContent = String(this.world.id).padStart(7, '0');
+    document.getElementById('hudGenre').textContent = this.world.genre.name;
+    document.getElementById('hudScore').textContent = this.score.toLocaleString();
+    document.getElementById('hudMeta').textContent =
+      `G ${this.world.gravity.toFixed(2)} · SPD ${this.world.speed.toFixed(1)} · ${this.world.scale.length} notes · H${Math.round(parseInt(this.world.palette.primary.slice(5)))}`;
+  }
+}
 
- const rng=makeRng(data.seed+"-STARS");
- for(let i=0;i<120;i++){
-  gc.fillStyle="rgba(255,255,255,.4)";
-  gc.fillRect(rng()*GW,rng()*GH,2,2);
- }
-
- if(gameMode==="puzzle"){
-  const size=70,gap=12;
-  const sx=(GW-(6*size+5*gap))/2;
-  const sy=(GH-(5*size+4*gap))/2;
-
-  tiles.forEach((t,i)=>{
-   if(!t.active)return;
-   const x=sx+(i%6)*(size+gap);
-   const y=sy+Math.floor(i/6)*(size+gap);
-   gc.fillStyle=tileColors[t.color];
-   gc.shadowColor=tileColors[t.color];
-   gc.shadowBlur=selected===i?24:7;
-   gc.beginPath();
-   gc.roundRect(x,y,size,size,12);
-   gc.fill();
-   gc.shadowBlur=0;
-   if(selected===i){
-    gc.strokeStyle="#fff";gc.lineWidth=4;
-    gc.stroke();
-   }
-   gc.fillStyle="#fff";
-   gc.font="bold 29px sans-serif";
-   gc.textAlign="center";
-   gc.fillText(["✦","◆","●","⬟","✧","■"][t.color],x+35,y+44);
+// ---------- App bootstrap ----------
+(function() {
+  const canvas = document.getElementById('gameCanvas');
+  const game = new OmniGame(canvas);
+  
+  function getWorldIdFromURL() {
+    const params = new URLSearchParams(location.search);
+    let id = params.get('world');
+    if (id === null && location.hash) {
+      const m = location.hash.match(/world[=:]?(\d+)/i);
+      if (m) id = m[1];
+    }
+    if (id === null) id = Math.floor(Math.random() * 10000000);
+    return Math.max(0, Math.min(9999999, parseInt(id, 10) || 0));
+  }
+  
+  function setURL(id) {
+    const url = new URL(location.href);
+    url.searchParams.set('world', id);
+    history.replaceState(null, '', url);
+  }
+  
+  function enterWorld(id) {
+    id = Math.max(0, Math.min(9999999, Math.floor(Number(id) || 0)));
+    game.loadWorld(id);
+    setURL(id);
+    document.getElementById('worldInput').value = id;
+    document.getElementById('overlayTitle').textContent = game.world.name;
+    document.getElementById('overlayDesc').textContent = `${game.world.genre.name} · Seed ${game.world.seed.toString(16).slice(0,6)}`;
+    document.getElementById('btnStart').textContent = 'Enter Universe';
+  }
+  
+  // Init
+  const initialId = getWorldIdFromURL();
+  enterWorld(initialId);
+  
+  // UI bindings
+  document.getElementById('btnStart').addEventListener('click', () => {
+    document.getElementById('overlay').style.display = 'none';
+    game.start();
   });
-
-  gc.fillStyle="#fff";
-  gc.font="bold 19px sans-serif";
-  gc.fillText("SCORE "+puzzleScore+"   MOVES "+puzzleMoves,450,35);
- }else{
-  drawAction();
- }
-}
-
-function puzzleClick(x,y){
- if(puzzleDone)return;
-
- const size=70,gap=12;
- const sx=(GW-(6*size+5*gap))/2;
- const sy=(GH-(5*size+4*gap))/2;
- const col=Math.floor((x-sx)/(size+gap));
- const row=Math.floor((y-sy)/(size+gap));
- if(col<0||col>=6||row<0||row>=5)return;
-
- const i=row*6+col;
- if(!tiles[i].active)return;
-
- if(selected===null){
-  selected=i;drawGame();return;
- }
-
- if(selected===i){
-  selected=null;drawGame();return;
- }
-
- const a=tiles[selected],b=tiles[i];
- puzzleMoves++;
-
- if(a.color===b.color){
-  a.active=false;b.active=false;
-  puzzleScore+=100;
-  $("gameStatus").textContent="✨ MATCH! +100";
-  if(tiles.every(t=>!t.active)){
-   puzzleDone=true;
-   puzzleScore+=500;
-   data.saves.puzzle.score=Math.max(data.saves.puzzle.score,puzzleScore);
-   data.saves.puzzle.games++;
-   unlock("puzzle_win");
-   addXP(50);
-   recordScore("puzzle",puzzleScore);
-   save();
-   $("gameStatus").textContent="🏆 PERFECT CLEAR! +500";
-  }
- }else{
-  $("gameStatus").textContent="違う色です。もう一度！";
- }
- selected=null;
- data.saves.puzzle.moves=puzzleMoves;
- drawGame();
-}
-
-function startGame(type){
- gameMode=type;
- stopAction();
-
- $("gameTitle").textContent=type==="puzzle"?
-  "🧩 Quantum Puzzle":"🚀 Cosmic Survivor";
-
- $("dpad").classList.toggle("hidden",type!=="action");
- $("pauseGame").classList.toggle("hidden",type!=="action");
-
- if(type==="puzzle"){
-  generatePuzzle();
-  $("gameStatus").textContent="同じ色のタイルを2枚選択してください。";
- }else{
-  resetAction();
-  $("gameStatus").textContent="STARTを押してください。";
- }
- navigate("games");
-}
-
-$("restartGame").onclick=()=>{
- if(gameMode==="puzzle")generatePuzzle();
- else{resetAction();startAction();}
-};
-
-$("hintGame").onclick=()=>{
- if(gameMode!=="puzzle")return;
- const i=tiles.findIndex(t=>t.active);
- if(i>=0){
-  selected=i;
-  drawGame();
-  $("gameStatus").textContent="光るタイルと同じ色を探してください。";
- }
-};
-
-gameCanvas.addEventListener("pointerdown",e=>{
- const r=gameCanvas.getBoundingClientRect();
- const x=(e.clientX-r.left)*GW/r.width;
- const y=(e.clientY-r.top)*GH/r.height;
- if(gameMode==="puzzle")puzzleClick(x,y);
-});
-
-/* =========================================
-   ACTION GAME
-========================================= */
-
-let player={x:450,y:300,r:17};
-let enemies=[];
-let orbs=[];
-let actionScore=0;
-let actionRunning=false;
-let actionOver=false;
-let actionFrame=0;
-let actionKeys={};
-let touchDir={x:0,y:0};
-let lastActionTime=0;
-
-function resetAction(){
- player={x:450,y:300,r:17};
- enemies=[];
- orbs=[];
- actionScore=0;
- actionFrame=0;
- actionOver=false;
- actionRunning=false;
- touchDir={x:0,y:0};
- for(let i=0;i<5;i++)spawnOrb();
- drawGame();
-}
-
-function spawnOrb(){
- const rng=makeRng(data.seed+"-ORB-"+actionFrame+"-"+orbs.length);
- orbs.push({x:40+rng()*820,y:40+rng()*520,r:9});
-}
-
-function spawnEnemy(){
- const rng=makeRng(data.seed+"-ENEMY-"+actionFrame);
- const side=Math.floor(rng()*4);
- enemies.push({
-  x:side===0?0:side===1?900:rng()*900,
-  y:side===2?0:side===3?600:rng()*600,
-  speed:1.2+rng()*1.5+world.difficulty*.15,
-  r:15+rng()*7
- });
-}
-
-function drawAction(){
- gc.fillStyle="#080d20";gc.fillRect(0,0,GW,GH);
- gc.fillStyle="#fff";
- gc.font="bold 18px sans-serif";
- gc.textAlign="left";
- gc.fillText("ENERGY "+actionScore,22,32);
-
- orbs.forEach(o=>{
-  gc.shadowColor="#55e9ee";gc.shadowBlur=20;
-  gc.fillStyle="#55e9ee";
-  gc.beginPath();gc.arc(o.x,o.y,o.r,0,Math.PI*2);gc.fill();
-  gc.shadowBlur=0;
- });
-
- enemies.forEach(e=>{
-  gc.fillStyle="#fa678c";
-  gc.shadowColor="#fa678c";gc.shadowBlur=15;
-  gc.beginPath();gc.arc(e.x,e.y,e.r,0,Math.PI*2);gc.fill();
-  gc.shadowBlur=0;
- });
-
- gc.fillStyle="#c3baff";
- gc.shadowColor="#9385ff";gc.shadowBlur=25;
- gc.beginPath();gc.arc(player.x,player.y,player.r,0,Math.PI*2);gc.fill();
- gc.shadowBlur=0;
-
- if(!actionRunning){
-  gc.textAlign="center";gc.fillStyle="#fff";
-  gc.font="bold 26px sans-serif";
-  gc.fillText(actionOver?"GAME OVER":"COSMIC SURVIVOR",450,280);
-  gc.font="15px sans-serif";
-  gc.fillText("START / NEW GAME",450,320);
- }
-}
-
-function updateAction(dt){
- if(!actionRunning||actionOver)return;
- const f=Math.min(dt/16.67,2);
- actionFrame++;
-
- let dx=0,dy=0;
- if(actionKeys.ArrowLeft||actionKeys.a)dx--;
- if(actionKeys.ArrowRight||actionKeys.d)dx++;
- if(actionKeys.ArrowUp||actionKeys.w)dy--;
- if(actionKeys.ArrowDown||actionKeys.s)dy++;
-
- dx+=touchDir.x;dy+=touchDir.y;
- const len=Math.hypot(dx,dy)||1;
- player.x+=dx/len*4*f;
- player.y+=dy/len*4*f;
- player.x=Math.max(17,Math.min(883,player.x));
- player.y=Math.max(17,Math.min(583,player.y));
-
- if(actionFrame%75===0)spawnEnemy();
- if(actionFrame%150===0&&orbs.length<8)spawnOrb();
-
- enemies.forEach(e=>{
-  const vx=player.x-e.x,vy=player.y-e.y;
-  const d=Math.hypot(vx,vy)||1;
-  e.x+=vx/d*e.speed*f;
-  e.y+=vy/d*e.speed*f;
-  if(d<player.r+e.r-3){
-   actionOver=true;
-   actionRunning=false;
-   data.saves.action.games++;
-   data.saves.action.score=Math.max(data.saves.action.score,actionScore);
-   recordScore("action",actionScore);
-   if(actionScore>=100)unlock("action_100");
-   save();
-   $("gameStatus").textContent="GAME OVER · "+actionScore;
-  }
- });
-
- for(let i=orbs.length-1;i>=0;i--){
-  const o=orbs[i];
-  if(Math.hypot(player.x-o.x,player.y-o.y)<player.r+o.r){
-   orbs.splice(i,1);
-   actionScore+=10;
-   data.saves.action.score=Math.max(data.saves.action.score,actionScore);
-   if(orbs.length<5)spawnOrb();
-   if(actionScore>=100)unlock("action_100");
-  }
- }
-}
-
-function startAction(){
- if(actionOver)resetAction();
- actionRunning=true;
-}
-
-function stopAction(){actionRunning=false}
-
-$("pauseGame").onclick=()=>{
- actionRunning=false;
- $("gameStatus").textContent="PAUSED";
-};
-
-$("dpad").querySelectorAll("button").forEach(b=>{
- const dir=b.dataset.dir;
- const map={
-  up:{x:0,y:-1},down:{x:0,y:1},
-  left:{x:-1,y:0},right:{x:1,y:0}
- };
- b.addEventListener("pointerdown",e=>{
-  e.preventDefault();
-  touchDir=map[dir];
-  b.setPointerCapture(e.pointerId);
-  startAction();
- });
- const release=()=>touchDir={x:0,y:0};
- b.addEventListener("pointerup",release);
- b.addEventListener("pointercancel",release);
- b.addEventListener("lostpointercapture",release);
-});
-
-window.addEventListener("keydown",e=>{
- actionKeys[e.key]=true;
-});
-window.addEventListener("keyup",e=>{
- actionKeys[e.key]=false;
-});
-window.addEventListener("blur",()=>{
- actionKeys={};touchDir={x:0,y:0};stopAction();
-});
-
-function loop(t){
- const dt=lastActionTime?Math.min(t-lastActionTime,50):16.67;
- lastActionTime=t;
- if(gameMode==="action"){
-  updateAction(dt);
-  drawAction();
- }
- drawPlanet();
- requestAnimationFrame(loop);
-}
-
-/* =========================================
-   SCORE & LOCAL LEADERBOARD
-========================================= */
-
-function recordScore(type,score){
- if(score<=0)return;
- data.scores.push({
-  type,
-  score,
-  date:new Date().toISOString(),
-  seed:data.seed
- });
- data.scores.sort((a,b)=>b.score-a.score);
- data.scores=data.scores.slice(0,100);
- save();
-}
-
-$("saveRanking").onclick=()=>{
- const name=$("playerName").value.trim()||"Explorer";
- const score=data.scores.reduce((a,b)=>Math.max(a,b.score),0);
- if(score<=0){
-  $("rankingList").textContent="まだスコアがありません。";
-  return;
- }
- data.scores.push({
-  type:"manual",
-  score,
-  name:name.slice(0,20),
-  date:new Date().toISOString(),
-  seed:data.seed
- });
- data.scores.sort((a,b)=>b.score-a.score);
- data.scores=data.scores.slice(0,100);
- save();
-};
-
-function renderRanking(){
- const entries=data.scores.slice(0,20);
- $("rankingList").innerHTML=entries.map((s,i=>`
-  <div class="listItem">
-   <span>${i+1}. ${escapeHTML(s.name||"Explorer")}
-   <small class="muted"> ${escapeHTML(s.type)}</small></span>
-   <b>${s.score.toLocaleString()}</b>
-  </div>`).join("")||'<p class="muted">ランキングデータはありません。</p>';
-}
-
-/* =========================================
-   INDIVIDUAL GAME SAVES
-========================================= */
-
-function renderSaves(){
- const saves=data.saves;
- $("saveList").innerHTML=Object.entries(saves).map(([k,v])=>`
-  <div class="listItem">
-   <span><b>${escapeHTML(k.toUpperCase())}</b><br>
-   <small class="muted">${escapeHTML(JSON.stringify(v))}</small></span>
-   <span class="badge">SAVED</span>
-  </div>`).join("");
-}
-
-$("exportSave").onclick=()=>{
- const blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json"});
- const url=URL.createObjectURL(blob);
- const a=document.createElement("a");
- a.href=url;a.download="omni-verse-save.json";
- a.click();
- URL.revokeObjectURL(url);
-};
-
-$("importSave").onclick=()=>$("importFile").click();
-
-$("importFile").onchange=async e=>{
- const file=e.target.files[0];
- if(!file)return;
- try{
-  if(file.size>5*1024*1024)throw new Error("ファイルが大きすぎます");
-  const imported=JSON.parse(await file.text());
-  if(imported.version!==2||!imported.player||!imported.saves||
-     !Array.isArray(imported.discovered)||
-     !Array.isArray(imported.achievements)||
-     !Array.isArray(imported.scores)){
-   throw new Error("無効なセーブデータです");
-  }
-  data={
-   ...structuredClone(DEFAULT_DATA),
-   ...imported,
-   player:{...DEFAULT_DATA.player,...imported.player},
-   saves:{...DEFAULT_DATA.saves,...imported.saves}
+  
+  document.getElementById('btnGo').addEventListener('click', () => {
+    const id = document.getElementById('worldInput').value;
+    enterWorld(id);
+  });
+  
+  document.getElementById('worldInput').addEventListener('keydown', e => {
+    if (e.key === 'Enter') {
+      enterWorld(document.getElementById('worldInput').value);
+    }
+  });
+  
+  document.getElementById('btnRandom').addEventListener('click', () => {
+    const id = Math.floor(Math.random() * 10000000);
+    enterWorld(id);
+    document.getElementById('overlay').style.display = 'none';
+    game.start();
+  });
+  
+  document.getElementById('btnRandomOverlay').addEventListener('click', () => {
+    const id = Math.floor(Math.random() * 10000000);
+    enterWorld(id);
+  });
+  
+  document.getElementById('btnMute').addEventListener('click', () => {
+    const muted = game.audio.toggleMute();
+    document.getElementById('iconSound').style.opacity = muted ? 0.35 : 1;
+  });
+  
+  // Resume audio context on first interaction
+  const resume = () => {
+    if (game.audio.ctx && game.audio.ctx.state === 'suspended') game.audio.ctx.resume();
+    window.removeEventListener('click', resume);
+    window.removeEventListener('touchstart', resume);
   };
-  generateWorld(data.seed);
-  save();
-  $("gameStatus").textContent="セーブデータを読み込みました。";
- }catch(err){
-  alert("読み込みエラー: "+err.message);
- }
- e.target.value="";
-};
-
-/* =========================================
-   ONLINE LEADERBOARD ADAPTER
-========================================= */
-
-/*
-  オンラインランキングを使う場合:
-  1. 自分のサーバーにランキングAPIを設置
-  2. API_BASEにHTTPSのURLを設定
-  3. サーバー側でユーザー認証とスコア検証を行う
-
-  このHTML単独ではオンライン共有されません。
-*/
-
-const ONLINE_CONFIG={
- enabled:false,
- apiBase:""
-};
-
-async function submitOnlineScore(entry){
- if(!ONLINE_CONFIG.enabled||!ONLINE_CONFIG.apiBase){
-  return {ok:false,message:"オンラインAPI未設定"};
- }
- try{
-  const response=await fetch(
-   ONLINE_CONFIG.apiBase+"/scores",
-   {
-    method:"POST",
-    headers:{"Content-Type":"application/json"},
-    body:JSON.stringify(entry)
-   }
-  );
-  if(!response.ok)throw new Error("API error "+response.status);
-  return {ok:true,data:await response.json()};
- }catch(error){
-  return {ok:false,message:error.message};
- }
-}
-
-async function fetchOnlineRanking(){
- if(!ONLINE_CONFIG.enabled||!ONLINE_CONFIG.apiBase)return null;
- try{
-  const response=await fetch(ONLINE_CONFIG.apiBase+"/scores");
-  if(!response.ok)throw new Error("API error");
-  return await response.json();
- }catch(error){
-  return null;
- }
-}
-
-/* =========================================
-   INITIALIZATION
-========================================= */
-
-function init(){
- generateWorld(data.seed);
- generatePuzzle();
- updateUI();
- $("playerName").value="Explorer";
- requestAnimationFrame(loop);
-}
-
-init();
-
+  window.addEventListener('click', resume);
+  window.addEventListener('touchstart', resume);
+})();
 </script>
 </body>
 </html>
